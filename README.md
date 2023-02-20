@@ -13,7 +13,8 @@ in svg, so on top.
 
 ![](examples/csound_floss_manual/01-GS-05-c.png)
 
-the draw2Svg sources are copied here for convenience, but what i collect here
+the draw2Svg sources are copied 
+[here](draw2Svg) for convenience, but what i collect here
 are contributions for documentation and examples.
 
 ![](examples/csound_floss_manual/01-GS-10-c.png)
@@ -26,7 +27,7 @@ are contributions for documentation and examples.
 
 ![](docs/img/05_clip2.svg)
 
-## examples
+## Examples
 
 ### from svg essentials
 
