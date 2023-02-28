@@ -59,8 +59,6 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#ellipse">Ellipse</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#pie">Pie</a>
-    </li>
         </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#color-and-painting-properties">Color and Painting Properties</a>
@@ -122,6 +120,8 @@
     <li class="toctree-l3"><a class="reference internal" href="#text-on-a-path">Text on a Path</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#multi-line-text">Multi Line Text</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#fonts">Fonts</a>
     </li>
         </ul>
     </li>
@@ -191,17 +191,17 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="draw2svg-quick-reference">draw2Svg Quick Reference</h1>
-<p>Repository: <a href="https://github.com/aufarah/draw2Svg">https://github.com/aufarah/draw2Svg</a></p>
-<p>Documentation: <a href="https://draw2svg.netlify.app/">https://draw2svg.netlify.app/</a></p>
-<pre><code>import draw2Svg as dw
+                <h1 id="drawsvg-quick-reference">drawsvg Quick Reference</h1>
+<p>Repository: <a href="https://github.com/cduck/drawSvg">https://github.com/cduck/drawSvg</a></p>
+<pre><code>import drawsvg as dw
 </code></pre>
 <h2 id="canvas-and-document-structure">Canvas and Document Structure</h2>
-<pre><code>d = dw.Drawing(width, height, origin=(0,0), idPrefix='d',
-                 displayInline=True, **svgArgs)
+<pre><code>d = dw.Drawing(width, height, origin=(0, 0), 
+               context: drawsvg.types.Context = None, animation_config=None, 
+               id_prefix='d', **svg_args)
 </code></pre>
-<p>It is recommended to use a unique <code>idPrefix</code> for each svg on a webpage.</p>
-<pre><code class="language-python">d = dw.Drawing(400, 300, idPrefix='pic')
+<p>It is recommended to use a unique <code>id_prefix</code> for each svg on a webpage.</p>
+<pre><code class="language-python">d = dw.Drawing(400, 300, id_prefix='pic')
 </code></pre>
 <h2 id="basic-shapes">Basic Shapes</h2>
 <h3 id="one-line">One Line</h3>
@@ -213,7 +213,7 @@ d.append(line)
 <p><img alt="svg" src="img/01_line.svg" /></p>
 <h3 id="multiple-lines">Multiple Lines</h3>
 <p>This is SVG's <code>polyline</code>. 
-(But draw2Svg renders as path with multiple L.)</p>
+(But drawsvg renders as path with multiple L.)</p>
 <pre><code>dw.Lines(sx, sy, *points, close=False, **kwargs)
 </code></pre>
 <pre><code class="language-python">lines = dw.Lines(10,90,10,10,80,90,80,10,fill='none',stroke='black')
@@ -226,7 +226,7 @@ d.append(dw.Lines(*xy,stroke='black',stroke_width=5,fill='none'))
 </code></pre>
 <p><img alt="svg" src="img/01_multilines2.svg" /></p>
 <h3 id="polygon">Polygon</h3>
-<p>SVG <code>Polygon</code> is <code>Lines</code> with <code>close=True</code>.</p>
+<p>SVG <code>Polygon</code> is drawsvg <code>Lines</code> with <code>close=True</code>.</p>
 <pre><code class="language-python">polygon = dw.Lines(15,10,55,10,45,20,5,20,fill='red',stroke='black',close='true')
 star = dw.Lines(48,16, 16,96, 96,48, 0,48, 88,96,
          stroke='black',fill='none',close='true')
@@ -276,15 +276,6 @@ d.append(dw.Ellipse(460,50,50,30,stroke='black',fill='none'))
 d.append(dw.Ellipse(550,50,30,45,stroke='black',fill='none'))
 </code></pre>
 <p><img alt="svg" src="img/01_ellip.svg" /></p>
-<h3 id="pie">Pie</h3>
-<pre><code>dw.Pie(cx, cy, r, startDeg, endDeg, **kwargs)
-</code></pre>
-<p>startDeg,endDeg = start and end angle in degree (0 = east)</p>
-<p>(Note that degrees are here counterclockwise, so 90 is north.)</p>
-<pre><code class="language-python">pie = dw.Pie(cx=100,cy=100,r=80,startDeg=0,endDeg=90,fill= &quot;None&quot;,
-             stroke=&quot;pink&quot;,stroke_width=3)
-</code></pre>
-<p><img alt="svg" src="img/01_pie.svg" /></p>
 <h2 id="color-and-painting-properties">Color and Painting Properties</h2>
 <p>For a full list, see <a href="https://www.w3.org/TR/SVG11/styling.html">W3C specifications</a>.</p>
 <h3 id="fill-and-stroke_color">fill and stroke_color</h3>
@@ -503,13 +494,13 @@ for pnt,ctl in zip((pnt_1,pnt_2,pnt_3),(ctl_1,ctl_2,ctl_3)):
     ex,ey = end point
 </code></pre>
 <pre><code class="language-python">p = dw.Path(stroke='red')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=0,sweep=0,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=0,sweep=0,ex=225,ey=125))
 p = dw.Path(stroke='blue')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=0,sweep=1,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=0,sweep=1,ex=225,ey=125))
 p = dw.Path(stroke='rgb(0 80 255)',stroke_dasharray='5 3')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=1,sweep=0,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=1,sweep=0,ex=225,ey=125))
 p = dw.Path(stroke='rgb(255 80 0)',stroke_dasharray='5 3')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=1,sweep=1,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=1,sweep=1,ex=225,ey=125))
 </code></pre>
 <p><img alt="svg" src="img/03_pA.svg" /></p>
 <h3 id="z-closepath">Z = closepath</h3>
@@ -523,9 +514,9 @@ d.append(p.M(50,10).h(30).v(50).Z())
 <p><img alt="svg" src="img/03_pZ.svg" /></p>
 <h2 id="text">Text</h2>
 <pre><code>dw.Text(text, fontSize, x=None, y=None, *, center=False,
-           valign=None, lineHeight=1, lineOffset=0, path=None,
-           startOffset=None, pathArgs=None, tspanArgs=None,
-           cairoFix=True, _skipCheck=False, **kwargs)
+           line_height=1, line_offset=0, path=None, 
+           start_offset=None, path_args=None, tspan_args=None, 
+           cairo_fix=True, _skip_check=False, **kwargs)
 </code></pre>
 <h3 id="fill-and-outline">Fill and Outline</h3>
 <p>Default is black as fill colour and no outline.</p>
@@ -537,30 +528,31 @@ for i in range(1,7):
 d.append(l)
 
 # default text, with outline, and outline only
-d.append(dw.Text('Simplest Text',x=20,y=60,fontSize=50))
-d.append(dw.Text('Outline / Filled',x=20,y=120,fontSize=50,stroke='black'))
-d.append(dw.Text('Too big stroke',x=20,y=180,fontSize=50,stroke='black',stroke_width=5))
-d.append(dw.Text('Outlined only',x=20,y=240,fontSize=50,stroke='black',stroke_width=0.5,fill='none'))
-d.append(dw.Text('Outlined and colored',x=20,y=300,fontSize=50,stroke='black',fill='red'))
-d.append(dw.Text('Colored fill only',x=20,y=360,fontSize=50,fill='blue'))
+d.append(dw.Text('Simplest Text',x=20,y=60,font_size=50))
+d.append(dw.Text('Outline / Filled',x=20,y=120,font_size=50,stroke='black'))
+d.append(dw.Text('Too big stroke',x=20,y=180,font_size=50,stroke='black',stroke_width=5))
+d.append(dw.Text('Outlined only',x=20,y=240,font_size=50,stroke='black',stroke_width=0.5,fill='none'))
+d.append(dw.Text('Outlined and colored',x=20,y=300,font_size=50,stroke='black',fill='red'))
+d.append(dw.Text('Colored fill only',x=20,y=360,font_size=50,fill='blue'))
 </code></pre>
 <p><img alt="svg" src="img/04_fill.svg" /></p>
 <h3 id="weight-style-decoration-spacing">Weight, Style, Decoration, Spacing</h3>
-<pre><code class="language-python">d.append(dw.Text('bold',fontSize=30,x=20,y=35,font_weight='bold'))
-d.append(dw.Text('italic',fontSize=30,x=20,y=75,font_style='italic'))
-d.append(dw.Text('under',fontSize=30,x=20,y=115,text_decoration='underline'))
-d.append(dw.Text('over',fontSize=30,x=20,y=155,text_decoration='overline'))
-d.append(dw.Text('through',fontSize=30,x=20,y=195,text_decoration='line-through'))
-d.append(dw.Text('normal word space',fontSize=30,x=200,y=35))
-d.append(dw.Text('more word space',fontSize=30,x=200,y=75,word_spacing=10))
-d.append(dw.Text('less word space',fontSize=30,x=200,y=115,word_spacing=-5))
-d.append(dw.Text('wide letter space',fontSize=30,x=200,y=155,letter_spacing=8))
-d.append(dw.Text('narrow letter space',fontSize=30,x=200,y=195,letter_spacing=-2))
+<pre><code class="language-python">d.append(dw.Text('bold',font_size=30,x=20,y=35,font_weight='bold'))
+d.append(dw.Text('italic',font_size=30,x=20,y=75,font_style='italic'))
+d.append(dw.Text('under',font_size=30,x=20,y=115,text_decoration='underline'))
+d.append(dw.Text('over',font_size=30,x=20,y=155,text_decoration='overline'))
+d.append(dw.Text('through',font_size=30,x=20,y=195,text_decoration='line-through'))
+d.append(dw.Text('normal word space',font_size=30,x=200,y=35))
+d.append(dw.Text('more word space',font_size=30,x=200,y=75,word_spacing=10))
+d.append(dw.Text('less word space',font_size=30,x=200,y=115,word_spacing=-5))
+d.append(dw.Text('wide letter space',font_size=30,x=200,y=155,letter_spacing=8))
+d.append(dw.Text('narrow letter space',font_size=30,x=200,y=195,letter_spacing=-2))
 </code></pre>
 <p><img alt="svg" src="img/04_weight.svg" /></p>
 <h3 id="text-alignment">Text Alignment</h3>
 <p>Horizontal alignment (text_anchor) can be <code>start</code>, <code>middle</code> or <code>end</code>.</p>
-<p>Vertival alignment (valign) can be <code>bottom</code>, <code>middle</code> or <code>top</code>.</p>
+<p>Vertical alignment (dominant_baseline) can be <code>auto</code>, <code>middle</code> or <code>hanging</code> (and more, see
+<a href="https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dominant-baseline">here</a>).</p>
 <pre><code class="language-python">d.append(dw.Line(75,100,75,0,stroke='gray'))
 d.append(dw.Line(140,30,250,30,stroke='gray'))
 d.append(dw.Line(140,60,250,60,stroke='gray'))
@@ -568,9 +560,9 @@ d.append(dw.Line(140,90,250,90,stroke='gray'))
 d.append(dw.Text('Start',24,75,30,text_anchor='start'))
 d.append(dw.Text('Middle',24,75,60,text_anchor='middle'))
 d.append(dw.Text('End',24,75,90,text_anchor='end'))
-d.append(dw.Text('Bottom',24,150,30,valign='bottom'))
-d.append(dw.Text('Middle',24,150,60,valign='middle'))
-d.append(dw.Text('Top',24,150,90,valign='top'))
+d.append(dw.Text('Auto',24,150,30,dominant_baseline='bottom'))
+d.append(dw.Text('Middle',24,150,60,dominant_baseline='middle'))
+d.append(dw.Text('Hanging',24,150,90,dominant_baseline='top'))
 </code></pre>
 <p><img alt="svg" src="img/04_align.svg" /></p>
 <h3 id="tspan">TSpan</h3>
@@ -665,24 +657,38 @@ is rendered as multi-line text.</p>
 d.append(dw.Text(t,14,50,20,text_anchor='middle'))
 </code></pre>
 <p><img alt="svg" src="img/04_multiline_text.svg" /></p>
+<h3 id="fonts">Fonts</h3>
+<p>Specify fonts via font_family.</p>
+<pre><code class="language-python">d.append(dw.Text('Ein Taxt in Quicksand.',30,10,35,font_family='Quicksand'))
+d.append(dw.Text('Ein Taxt in Cantarell.',30,10,75,font_family='Cantarell'))
+d.append(dw.Text('Ein Taxt in Simvoni.',30,10,115,font_family='Simvoni'))
+</code></pre>
+<p><img alt="png" src="img/04_fonts1.png" /></p>
+<p>Specify a default font.</p>
+<pre><code class="language-python">d = dw.Drawing(600,120,font_family='Cantarell Light')
+d.append(dw.Text('Ein Taxt in global setting (Cantarell Light).',30,10,35))
+d.append(dw.Text('Ein Taxt in Cantarell.',30,10,75,font_family='Cantarell'))
+d.append(dw.Text('Ein Taxt in Simvoni.',30,10,115,font_family='Simvoni'))
+</code></pre>
+<p><img alt="png" src="img/04_fonts2.png" /></p>
 <h2 id="gradient-clip-mask">Gradient, Clip, Mask</h2>
 <h3 id="linear-gradient">Linear Gradient</h3>
 <pre><code>gradient = dw.LinearGradient(x1, y1, x2, y2, gradientUnits='userSpaceOnUse', **kwargs)
-gradient.addStop(offset, color, opacity=None)
+gradient.add_stop(offset, color, opacity=None)
 </code></pre>
 <pre><code class="language-python">grad = dw.LinearGradient(150,0,0,0)
-grad.addStop(0,'green')
-grad.addStop(1,'yellow')
+grad.add_stop(0,'green')
+grad.add_stop(1,'yellow')
 d.append(dw.Rectangle(10,10,150,60,stroke='black',fill=grad))
 </code></pre>
 <p><img alt="svg" src="img/05_lingrad.svg" /></p>
 <h3 id="radial-gradient">Radial Gradient</h3>
 <pre><code>gradient = dw.RadialGradient(cx, cy, r, **kwargs)
-gradient.addStop(offset, color, opacity=None)
+gradient.add_stop(offset, color, opacity=None)
 </code></pre>
 <pre><code class="language-python">gradient = dw.RadialGradient(200,150,100)
-gradient.addStop(0, 'green', 1)
-gradient.addStop(1, 'red', 1)
+gradient.add_stop(0, 'green', 1)
+gradient.add_stop(1, 'red', 1)
 bg = dw.Rectangle(x=0,y=0,width=&quot;100%&quot;,height=&quot;100%&quot;,fill=gradient)
 d.append(bg)
 </code></pre>
@@ -762,8 +768,8 @@ Opaque pixels of the mask produce opaque pixels of the masked object.
 Transparent parts of the mask make the corresponding parts of the masked object
 invisible.</p>
 <pre><code class="language-python">gradient = dw.LinearGradient(*[0,0],*[1,0], gradientUnits='objectBoundingBox')
-gradient.addStop(0, 'white')
-gradient.addStop(1, 'black')
+gradient.add_stop(0, 'white')
+gradient.add_stop(1, 'black')
 
 mask = dw.Mask()
 box = dw.Rectangle(
@@ -897,7 +903,7 @@ d.append(dw.Use(g_house,150,20))
 <p>Elements that are not <code>append</code>ed to the drawing but are referenced by other 
 elements will automatically be included in <code>&lt;defs&gt;&lt;/defs&gt;</code>.
 (<a href="https://github.com/cduck/drawSvg/issues/46">source</a>)</p>
-<pre><code class="language-python">d = dw.Drawing(200,200,idPrefix='defs')
+<pre><code class="language-python">d = dw.Drawing(200,200,id_prefix='defs')
 
 # Do not append `bond` to the drawing
 bond = dw.Line(0, 0, 10, 10, stroke='black')
@@ -908,7 +914,7 @@ d.append(dw.Use(bond, 20, 50))
 d.append(dw.Use(bond, 50, 50))
 d.append(dw.Use(bond, 80, 50))
 
-print(d.asSvg())
+print(d.as_svg())
 </code></pre>
 <p>Output:</p>
 <pre><code>&lt;defs&gt;
@@ -971,7 +977,7 @@ d.append(dw.Rectangle(70,30,40,40,fill='black',transform='rotate(45)'))
 </code></pre>
 <p><img alt="svg" src="img/07_rota.svg" /></p>
 <pre><code class="language-python"># center of rotation
-d.append(dw.Circle(100,100,3,flii='black'))
+d.append(dw.Circle(100,100,3,fill='black'))
 # non-rotated arrow
 g = dw.Group(id='arrow',stroke='black')
 g.append(dw.Line(110,100,160,100))
@@ -1036,10 +1042,12 @@ d.append(dw.Lines(40,40,100,40,70,70,40,70,fill='gray',stroke='black'))
 </code></pre>
 <p><img alt="svg" src="img/07_cart3.svg" /></p>
 <h2 id="credits">Credits</h2>
+<p>Written by joachim heintz 2023.</p>
 <p>Most examples are based on J. David Eisenberg, SVG Essentials, O'Reilly 2002.</p>
 <p>Thanks to <a href="https://github.com/aufarah">Ahmad Aufar Husaini</a>
- for his fork (draw2Svg) and for providing some documentation 
- (some examples are used here).</p>
+for his fork (draw2Svg) and for providing some documentation
+<a href="https://draw2svg.netlify.app/">here</a>
+(some examples are used in this Quick Reference).</p>
 <p>Thanks to <a href="https://github.com/cduck">Casey Duckering</a> for drawSvg and many
 helpful explanations on its <a href="https://github.com/cduck/drawSvg/discussions">discussion page</a>.</p>
               
@@ -1084,5 +1092,5 @@ helpful explanations on its <a href="https://github.com/cduck/drawSvg/discussion
 
 <!--
 MkDocs version : 1.4.2
-Build Date UTC : 2023-02-20 21:38:54.532687+00:00
+Build Date UTC : 2023-02-28 15:47:04.409770+00:00
 -->
