@@ -14,6 +14,23 @@ def note(x=10,y=10,y_space=10,**args):
     p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
     d.append(p)
 
+def viertel(x=10,y=10,dirlen=1,y_space=10,c='#444',sw=1,**args):
+    """4ter note with xy as center
+    dirlen=1 means in normal length (y_space*2.5) upwards
+    dirlen=-1.1 means in length 2.75*yspace downwards
+    sw is stroke width of the line
+    **args go to the head"""
+    r = y_space/2
+    p1 = x-r*1.2,y+r*.6
+    p2 = x+r*1.2,y-r*.6
+    p = dw.Path(fill=c,**args)
+    p.M(*p1)
+    p.C(x-r*1.7,y-r*.3, x+r*.3,y-r*1.4, *p2)
+    p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
+    d.append(p)
+    if dirlen > 0: d.append(dw.Line(p2[0],p2[1]+y_space/5,p2[0],p2[1]-dirlen*y_space*2.5,stroke=c,stroke_width=sw))
+    else: d.append(dw.Line(p1[0],p1[1]-y_space/5,p1[0],p1[1]-dirlen*y_space*2.5,stroke=c,stroke_width=sw))
+    
 def sharp(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=2/3):
     """sharp sign before a note
     x_note and y_note are the middle of the note
@@ -168,3 +185,86 @@ def bassClef(x=10,y=10,linspace=10,color='black',sw=2,r=1):
     d.append(p)
     d.append(dw.Circle(x+linspace*1.7,y+linspace-r*3,r,stroke=color))
     d.append(dw.Circle(x+linspace*1.7,y+linspace+r*3,r,stroke=color))
+
+def glisscurve(x=10,y=90,xend=100,yend=10,c='black',**args):
+    p = dw.Path(fill=c,stroke=c)
+    xdiff = xend-x
+    ydiff = yend-y
+    p1 = x,y
+    p2 = xend,yend
+    c1 = x+xdiff*.6,y+ydiff*.2
+    c2 = x+xdiff*.58,y+ydiff*.22
+    p.M(*p1)
+    p.Q(*c1,*p2)
+    p.Q(*c2,*p1)
+    d.append(p)
+
+def mezzo(x=10,y=20,siz=12,c='black',**args):
+    """musical notation for m=mezzo
+    the height is 1/2 of siz
+    x,y is bottom left"""
+    h = siz*1/2
+    xdif = h/2 
+    p1 = x,y-h #anfang li ob
+    p2 = x,y #li unt
+    c3 = x, y-h
+    p3 = x+xdif/2,y-h #halber weg oben
+    c4 = x+xdif,y-h
+    p4 = x+xdif,y #unt mitte
+    c5 = x+xdif,y-h
+    p5 = x+xdif*1.5,y-h
+    c6 = x+xdif*2,y-h
+    p6 = x+xdif*2,y
+    p = dw.Path(stroke=c,fill='none',**args)
+    p.M(*p1)
+    p.L(*p2)
+    p.Q(*c3,*p3)
+    p.Q(*c4,*p4)
+    p.Q(*c5,*p5)
+    p.Q(*c6,*p6)
+    d.append(p)
+
+def forte(x=10,y=20,siz=12,c='black',**args):
+    """musical notation for f=forte
+    the height is siz but left goes below
+    x,y is bottom left on the imagined line"""
+    pfict = x,y #never used
+    wdth = siz*.35
+    x1 = x+wdth #rechts aussen
+    y1 = y-siz*.9
+    x2 = x+wdth*.7 #höchster punkt
+    y2 = y-siz
+    x3 = x+wdth*.1 #tiefster punkt
+    y3 = y+siz*.25 
+    x4 = x-wdth*.1
+    y4 = y+siz*.15
+    c2 = x1,y2
+    c3a = x+wdth*.3,y-siz
+    c3b = x+wdth*.2,y+siz*.2
+    c4 = x4,y3
+    ys = y-siz*1/2
+    p = dw.Path(stroke=c,fill='none',**args)
+    p.M(x1,y1)
+    p.Q(*c2,x2,y2)
+    p.C(*c3a,*c3b,x3,y3)
+    p.Q(*c4,x4,y4)
+    p.M(x,ys)
+    p.H(x+wdth*.8)
+    d.append(p)
+
+def mezzoforte(x=10,y=20,siz=12,c='black',**args):
+    """mezzo and forte"""
+    xdist = siz*.66
+    mezzo(x,y,siz,c,**args)
+    forte(x+xdist,y,siz,c,**args)
+
+def cresc(x=10,y=30,xend=30,h=10,sw=0.5,**args):
+    """crescendo"""
+    p = dw.Path(stroke='black',fill='none',stroke_width=sw)
+    yendtop = y-h/2
+    yendbot = y+h/2
+    p.M(xend,yendtop)
+    p.L(x,y)
+    p.L(xend,yendbot)
+    d.append(p)
+    

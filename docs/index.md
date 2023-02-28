@@ -1,23 +1,23 @@
-# draw2Svg Quick Reference
+# drawsvg Quick Reference
 
-Repository: [https://github.com/aufarah/draw2Svg](https://github.com/aufarah/draw2Svg)
+Repository: [https://github.com/cduck/drawSvg](https://github.com/cduck/drawSvg)
 
-Documentation: [https://draw2svg.netlify.app/](https://draw2svg.netlify.app/)
 
 ```
-import draw2Svg as dw
+import drawsvg as dw
 ```
 
 ## Canvas and Document Structure
 ```
-d = dw.Drawing(width, height, origin=(0,0), idPrefix='d',
-                 displayInline=True, **svgArgs)
+d = dw.Drawing(width, height, origin=(0, 0), 
+               context: drawsvg.types.Context = None, animation_config=None, 
+               id_prefix='d', **svg_args)
 ```
 
-It is recommended to use a unique `idPrefix` for each svg on a webpage.
+It is recommended to use a unique `id_prefix` for each svg on a webpage.
 
 ```python
-d = dw.Drawing(400, 300, idPrefix='pic')
+d = dw.Drawing(400, 300, id_prefix='pic')
 ```
 
 
@@ -39,7 +39,7 @@ d.append(line)
 ### Multiple Lines
 
 This is SVG's `polyline`. 
-(But draw2Svg renders as path with multiple L.)
+(But drawsvg renders as path with multiple L.)
 
 ```
 dw.Lines(sx, sy, *points, close=False, **kwargs)
@@ -62,7 +62,7 @@ d.append(dw.Lines(*xy,stroke='black',stroke_width=5,fill='none'))
 
 ### Polygon
 
-SVG `Polygon` is `Lines` with `close=True`.
+SVG `Polygon` is drawsvg `Lines` with `close=True`.
 
 ```python
 polygon = dw.Lines(15,10,55,10,45,20,5,20,fill='red',stroke='black',close='true')
@@ -136,22 +136,6 @@ d.append(dw.Ellipse(460,50,50,30,stroke='black',fill='none'))
 d.append(dw.Ellipse(550,50,30,45,stroke='black',fill='none'))
 ```
 ![svg](img/01_ellip.svg)
-
-
-### Pie
-
-```
-dw.Pie(cx, cy, r, startDeg, endDeg, **kwargs)
-```
-startDeg,endDeg = start and end angle in degree (0 = east)
-
-(Note that degrees are here counterclockwise, so 90 is north.)
-
-```python
-pie = dw.Pie(cx=100,cy=100,r=80,startDeg=0,endDeg=90,fill= "None",
-             stroke="pink",stroke_width=3)
-```
-![svg](img/01_pie.svg)
 
 
 
@@ -471,13 +455,13 @@ path.A(rx,ry,rot,largeArc,sweep,ex,ey)
 
 ```python
 p = dw.Path(stroke='red')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=0,sweep=0,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=0,sweep=0,ex=225,ey=125))
 p = dw.Path(stroke='blue')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=0,sweep=1,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=0,sweep=1,ex=225,ey=125))
 p = dw.Path(stroke='rgb(0 80 255)',stroke_dasharray='5 3')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=1,sweep=0,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=1,sweep=0,ex=225,ey=125))
 p = dw.Path(stroke='rgb(255 80 0)',stroke_dasharray='5 3')
-d.append(p.M(125,75).A(100,50,rot=0,largeArc=1,sweep=1,ex=225,ey=125))
+d.append(p.M(125,75).A(100,50,rot=0,large_arc=1,sweep=1,ex=225,ey=125))
 ```
 ![svg](img/03_pA.svg)
 
@@ -502,9 +486,9 @@ d.append(p.M(50,10).h(30).v(50).Z())
 ## Text
 ```
 dw.Text(text, fontSize, x=None, y=None, *, center=False,
-           valign=None, lineHeight=1, lineOffset=0, path=None,
-           startOffset=None, pathArgs=None, tspanArgs=None,
-           cairoFix=True, _skipCheck=False, **kwargs)
+           line_height=1, line_offset=0, path=None, 
+           start_offset=None, path_args=None, tspan_args=None, 
+           cairo_fix=True, _skip_check=False, **kwargs)
 ```
 
 ### Fill and Outline
@@ -520,12 +504,12 @@ for i in range(1,7):
 d.append(l)
 
 # default text, with outline, and outline only
-d.append(dw.Text('Simplest Text',x=20,y=60,fontSize=50))
-d.append(dw.Text('Outline / Filled',x=20,y=120,fontSize=50,stroke='black'))
-d.append(dw.Text('Too big stroke',x=20,y=180,fontSize=50,stroke='black',stroke_width=5))
-d.append(dw.Text('Outlined only',x=20,y=240,fontSize=50,stroke='black',stroke_width=0.5,fill='none'))
-d.append(dw.Text('Outlined and colored',x=20,y=300,fontSize=50,stroke='black',fill='red'))
-d.append(dw.Text('Colored fill only',x=20,y=360,fontSize=50,fill='blue'))
+d.append(dw.Text('Simplest Text',x=20,y=60,font_size=50))
+d.append(dw.Text('Outline / Filled',x=20,y=120,font_size=50,stroke='black'))
+d.append(dw.Text('Too big stroke',x=20,y=180,font_size=50,stroke='black',stroke_width=5))
+d.append(dw.Text('Outlined only',x=20,y=240,font_size=50,stroke='black',stroke_width=0.5,fill='none'))
+d.append(dw.Text('Outlined and colored',x=20,y=300,font_size=50,stroke='black',fill='red'))
+d.append(dw.Text('Colored fill only',x=20,y=360,font_size=50,fill='blue'))
 ```
 ![svg](img/04_fill.svg)
 
@@ -533,16 +517,16 @@ d.append(dw.Text('Colored fill only',x=20,y=360,fontSize=50,fill='blue'))
 ### Weight, Style, Decoration, Spacing
 
 ```python
-d.append(dw.Text('bold',fontSize=30,x=20,y=35,font_weight='bold'))
-d.append(dw.Text('italic',fontSize=30,x=20,y=75,font_style='italic'))
-d.append(dw.Text('under',fontSize=30,x=20,y=115,text_decoration='underline'))
-d.append(dw.Text('over',fontSize=30,x=20,y=155,text_decoration='overline'))
-d.append(dw.Text('through',fontSize=30,x=20,y=195,text_decoration='line-through'))
-d.append(dw.Text('normal word space',fontSize=30,x=200,y=35))
-d.append(dw.Text('more word space',fontSize=30,x=200,y=75,word_spacing=10))
-d.append(dw.Text('less word space',fontSize=30,x=200,y=115,word_spacing=-5))
-d.append(dw.Text('wide letter space',fontSize=30,x=200,y=155,letter_spacing=8))
-d.append(dw.Text('narrow letter space',fontSize=30,x=200,y=195,letter_spacing=-2))
+d.append(dw.Text('bold',font_size=30,x=20,y=35,font_weight='bold'))
+d.append(dw.Text('italic',font_size=30,x=20,y=75,font_style='italic'))
+d.append(dw.Text('under',font_size=30,x=20,y=115,text_decoration='underline'))
+d.append(dw.Text('over',font_size=30,x=20,y=155,text_decoration='overline'))
+d.append(dw.Text('through',font_size=30,x=20,y=195,text_decoration='line-through'))
+d.append(dw.Text('normal word space',font_size=30,x=200,y=35))
+d.append(dw.Text('more word space',font_size=30,x=200,y=75,word_spacing=10))
+d.append(dw.Text('less word space',font_size=30,x=200,y=115,word_spacing=-5))
+d.append(dw.Text('wide letter space',font_size=30,x=200,y=155,letter_spacing=8))
+d.append(dw.Text('narrow letter space',font_size=30,x=200,y=195,letter_spacing=-2))
 ```
 ![svg](img/04_weight.svg)
 
@@ -551,7 +535,8 @@ d.append(dw.Text('narrow letter space',fontSize=30,x=200,y=195,letter_spacing=-2
 
 Horizontal alignment (text_anchor) can be `start`, `middle` or `end`.
 
-Vertival alignment (valign) can be `bottom`, `middle` or `top`.
+Vertical alignment (dominant_baseline) can be `auto`, `middle` or `hanging` (and more, see
+[here](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/dominant-baseline)).
 
 ```python
 d.append(dw.Line(75,100,75,0,stroke='gray'))
@@ -561,9 +546,9 @@ d.append(dw.Line(140,90,250,90,stroke='gray'))
 d.append(dw.Text('Start',24,75,30,text_anchor='start'))
 d.append(dw.Text('Middle',24,75,60,text_anchor='middle'))
 d.append(dw.Text('End',24,75,90,text_anchor='end'))
-d.append(dw.Text('Bottom',24,150,30,valign='bottom'))
-d.append(dw.Text('Middle',24,150,60,valign='middle'))
-d.append(dw.Text('Top',24,150,90,valign='top'))
+d.append(dw.Text('Auto',24,150,30,dominant_baseline='bottom'))
+d.append(dw.Text('Middle',24,150,60,dominant_baseline='middle'))
+d.append(dw.Text('Hanging',24,150,90,dominant_baseline='top'))
 ```
 ![svg](img/04_align.svg)
 
@@ -692,18 +677,42 @@ d.append(dw.Text(t,14,50,20,text_anchor='middle'))
 
 ![svg](img/04_multiline_text.svg)
 
+### Fonts
+
+Specify fonts via font_family.
+
+```python
+d.append(dw.Text('Ein Taxt in Quicksand.',30,10,35,font_family='Quicksand'))
+d.append(dw.Text('Ein Taxt in Cantarell.',30,10,75,font_family='Cantarell'))
+d.append(dw.Text('Ein Taxt in Simvoni.',30,10,115,font_family='Simvoni'))
+```
+
+![png](img/04_fonts1.png)
+
+Specify a default font.
+
+```python
+d = dw.Drawing(600,120,font_family='Cantarell Light')
+d.append(dw.Text('Ein Taxt in global setting (Cantarell Light).',30,10,35))
+d.append(dw.Text('Ein Taxt in Cantarell.',30,10,75,font_family='Cantarell'))
+d.append(dw.Text('Ein Taxt in Simvoni.',30,10,115,font_family='Simvoni'))
+```
+
+![png](img/04_fonts2.png)
+
+
 
 ## Gradient, Clip, Mask
 
 ### Linear Gradient
 ```
 gradient = dw.LinearGradient(x1, y1, x2, y2, gradientUnits='userSpaceOnUse', **kwargs)
-gradient.addStop(offset, color, opacity=None)
+gradient.add_stop(offset, color, opacity=None)
 ```
 ```python
 grad = dw.LinearGradient(150,0,0,0)
-grad.addStop(0,'green')
-grad.addStop(1,'yellow')
+grad.add_stop(0,'green')
+grad.add_stop(1,'yellow')
 d.append(dw.Rectangle(10,10,150,60,stroke='black',fill=grad))
 ```
 ![svg](img/05_lingrad.svg)
@@ -712,13 +721,13 @@ d.append(dw.Rectangle(10,10,150,60,stroke='black',fill=grad))
 ### Radial Gradient
 ```
 gradient = dw.RadialGradient(cx, cy, r, **kwargs)
-gradient.addStop(offset, color, opacity=None)
+gradient.add_stop(offset, color, opacity=None)
 ```
 
 ```python
 gradient = dw.RadialGradient(200,150,100)
-gradient.addStop(0, 'green', 1)
-gradient.addStop(1, 'red', 1)
+gradient.add_stop(0, 'green', 1)
+gradient.add_stop(1, 'red', 1)
 bg = dw.Rectangle(x=0,y=0,width="100%",height="100%",fill=gradient)
 d.append(bg)
 ```
@@ -819,8 +828,8 @@ invisible.
 
 ```python
 gradient = dw.LinearGradient(*[0,0],*[1,0], gradientUnits='objectBoundingBox')
-gradient.addStop(0, 'white')
-gradient.addStop(1, 'black')
+gradient.add_stop(0, 'white')
+gradient.add_stop(1, 'black')
 
 mask = dw.Mask()
 box = dw.Rectangle(
@@ -979,7 +988,7 @@ elements will automatically be included in `<defs></defs>`.
 ([source](https://github.com/cduck/drawSvg/issues/46))
 
 ```python
-d = dw.Drawing(200,200,idPrefix='defs')
+d = dw.Drawing(200,200,id_prefix='defs')
 
 # Do not append `bond` to the drawing
 bond = dw.Line(0, 0, 10, 10, stroke='black')
@@ -990,7 +999,7 @@ d.append(dw.Use(bond, 20, 50))
 d.append(dw.Use(bond, 50, 50))
 d.append(dw.Use(bond, 80, 50))
 
-print(d.asSvg())
+print(d.as_svg())
 ```
 
 Output:
@@ -1094,7 +1103,7 @@ d.append(dw.Rectangle(70,30,40,40,fill='black',transform='rotate(45)'))
 
 ```python
 # center of rotation
-d.append(dw.Circle(100,100,3,flii='black'))
+d.append(dw.Circle(100,100,3,fill='black'))
 # non-rotated arrow
 g = dw.Group(id='arrow',stroke='black')
 g.append(dw.Line(110,100,160,100))
@@ -1180,11 +1189,15 @@ d.append(dw.Lines(40,40,100,40,70,70,40,70,fill='gray',stroke='black'))
 
 
 ## Credits
+
+Written by joachim heintz 2023.
+
 Most examples are based on J. David Eisenberg, SVG Essentials, O'Reilly 2002.
 
 Thanks to [Ahmad Aufar Husaini](https://github.com/aufarah)
- for his fork (draw2Svg) and for providing some documentation 
- (some examples are used here).
+for his fork (draw2Svg) and for providing some documentation
+[here](https://draw2svg.netlify.app/)
+(some examples are used in this Quick Reference).
 
 Thanks to [Casey Duckering](https://github.com/cduck) for drawSvg and many
 helpful explanations on its [discussion page](https://github.com/cduck/drawSvg/discussions).

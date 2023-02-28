@@ -7,19 +7,17 @@ this is a collection of docs and examples of creating svg files
 
 ![](examples/csound_floss_manual/01-GS-05-b.png)
 
-they are based on [draw2Svg](https://github.com/aufarah/draw2Svg) which is itself
-a fork of [drawSvg](https://github.com/cduck/drawSvg), but putting y=0 as it is
-in svg, so on top.
+they are based on, and use [drawsvg](https://github.com/cduck/drawSvg) (in version 2).
+before version 2 i used [draw2Svg](https://github.com/aufarah/draw2Svg), so some
+examples are referring to it.
 
 ![](examples/csound_floss_manual/01-GS-05-c.png)
 
-the draw2Svg sources are copied 
-[here](draw2Svg) for convenience, but what i collect here
-are contributions for documentation and examples.
+what i collect here are contributions for documentation and examples.
 
 ![](examples/csound_floss_manual/01-GS-10-c.png)
 
-## draw2Svg Quick Reference 
+## drawsvg Quick Reference 
 
 [website](https://joachimheintz.github.io/svg/)
 
