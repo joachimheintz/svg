@@ -72,12 +72,12 @@ def glisscurve(x=10,y=90,xend=100,yend=10,c='black',sw=1,sdiff=1,**args):
     p.Q(*c2,*p1)
     d.append(p)
 
-def kratzgliss(x1=10,y1=10,x2=50,y2=10,h=4,swfac=0.2,prd=1,c='black',**args):
+def kratzgliss(x1=10,y1=10,x2=50,y2=10,h=4,swfac=1,prd=1,c='black',**args):
     """h ist die maximale höhe, p die periode
     ist im moment nur für waagerechte gliss; später nochmal die y-linie reinbringen
-    h * swfac = stroke_width"""
+    h * swfac * 0.2 = stroke_width"""
     from random import uniform
-    p = dw.Path(fill='none',stroke=c,stroke_width=h*swfac,**args)
+    p = dw.Path(fill='none',stroke=c,stroke_width=h*swfac*.2,**args)
     p.M(x1,y1)
     x = x1
     while x <= x2:
