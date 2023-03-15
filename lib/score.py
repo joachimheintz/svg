@@ -1,4 +1,4 @@
-# import draw2Svg as dw
+# import drawsvg as dw
 #w,h = 842,595
 #d = dw.Drawing(w,h)
 
