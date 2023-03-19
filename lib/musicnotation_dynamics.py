@@ -109,16 +109,19 @@ def piano3(x=10,y=20,siz=12,c='black',swfac=1,**args):
     piano(x+xdist/2,y,siz,c,swfac,**args)
     piano(x+xdist*1.5,y,siz,c,swfac,**args)
 
-def cresc(x=10,y=30,xend=30,yend=30,h=10,sw=0.4,c='black',**args):
+def cresc(x=10,y=30,xend=30,yend=30,h=10,sw=0.4,c='black',hstart=0,**args):
     """crescendo
     x,y ist in der anfangspunkt
     xend,yend ist die mitte am ende
-    h ist die gesamthöhe des cresc am ende"""
+    h ist die gesamthöhe des cresc am ende
+    hstart ist für den fall, dass das cresc nicht bei ganz geschlossener klammer beginnt
+    """
     p = dw.Path(stroke=c,fill='none',stroke_width=sw)
     yendtop = yend-h/2
     yendbot = yend+h/2
     p.M(xend,yendtop)
-    p.L(x,y)
+    if hstart==0:p.L(x,y)
+    else: p.L(x,y-hstart/2).M(x,y+hstart/2)
     p.L(xend,yendbot)
     d.append(p)
     

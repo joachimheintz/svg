@@ -6,6 +6,27 @@ def percHardMallet(x,y,r=2,prop=7,c='black',**args):
     d.append(dw.Circle(x,y,r,fill=c,**args))
     d.append(dw.Line(x,y,x,y+prop*r,stroke=c,stroke_width=r/5,**args))
 
+def percSoftMallet(x=20,y=50,r=2,prop=7,swfac=1,c='black',**args):
+    """symbol für weichen schlägel
+    x,y ist der mittelpunkt des kopfes
+    r ist dessen radius
+    prop ist die länge des stiels als verhältnis zu r
+    sw = swfac * r / 4"""
+    sw = swfac * r / 4
+    d.append(dw.Circle(x,y,r,stroke=c,fill='none',stroke_width=sw,**args))
+    d.append(dw.Line(x,y+r,x,y+prop*r,stroke=c,stroke_width=sw,**args))
+
+def perc2SoftMallets(x=20,y=50,r=2,prop=6,swfac=1,c='black',rotate=25,**args):
+    """zwei soft mallets als zeichen dass sie in einer hand gehalten werden
+    symbol für weichen schlägel
+    x,y ist der mittelpunkt des kopfes
+    r ist dessen radius
+    prop ist die länge des stiels als verhältnis zu r
+    sw = swfac * r / 4"""
+    yrot = y+(prop*r)*.66
+    percSoftMallet(x,y,r,prop,swfac,c,transform='rotate(%d %d %d)'%(rotate,x,yrot))
+    percSoftMallet(x,y,r,prop,swfac,c,transform='rotate(%d %d %d)'%(-rotate,x,yrot))
+
 def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',**args):
     """schlagzeugsymbol für bürste
     sw1fac ist für die waagerechte linie
@@ -84,3 +105,21 @@ def kralle(x=20,y=20,siz=12,c='black',sw=0.75,sw2=1,**args):
     d.append(dw.Line(*k2,*k2a,stroke=c,stroke_width=sw2,stroke_linecap='round'))
     d.append(dw.Line(*k3,*k3a,stroke=c,stroke_width=sw2,stroke_linecap='round'))
     d.append(dw.Line(*k4,*k4a,stroke=c,stroke_width=sw2,stroke_linecap='round'))
+
+def kreisLinks(x=20,y=20,r=7,swfac=1,c='black',**args):
+    """ein kreis mit pfeil nach links
+    sw = swfac * r / 10
+    x,y ist mitte des kreises"""
+    sw = swfac * r / 10
+    alen = r*.8
+    d.append(dw.Circle(x,y,r,fill='none',stroke=c,stroke_width=sw,**args))
+    d.append(dw.Lines(x+r-alen/2,y+alen/2, x+r,y ,x+r+alen/2,y+alen/2,fill='none',stroke=c,stroke_width=sw,**args))
+
+def kreisRechts(x=20,y=20,r=7,swfac=1,c='black',**args):
+    """ein kreis mit pfeil nach rechts
+    sw = swfac * r / 10
+    x,y ist mitte des kreises"""
+    sw = swfac * r / 10
+    alen = r*.8
+    d.append(dw.Circle(x,y,r,fill='none',stroke=c,stroke_width=sw,**args))
+    d.append(dw.Lines(x-r-alen/2,y+alen/2, x-r,y ,x-r+alen/2,y+alen/2,fill='none',stroke=c,stroke_width=sw,**args))

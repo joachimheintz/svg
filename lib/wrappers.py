@@ -16,7 +16,14 @@ def dot(x=10,y=10,r=3,c='black',**args):
     """quasi d.append(dw.Circle(...))
     with radius=3 and color=black as default"""
     d.append(dw.Circle(x,y,r,fill=c,**args))
-    
+
+def circ(x=10,y=10,r=3,c='black',swfac=1,**args):
+    """quasi d.append(dw.Circle(...))
+    with radius=3 and color=black as default
+    stroke-width = swfac*r/10"""
+    sw = swfac * r / 10
+    d.append(dw.Circle(x,y,r,stroke=c,stroke_width=sw,**args))
+
 def lines(x1=10,y1=10,*points,c='black',f='none',close=False,**args):
     """wrapper for d.append(dw.Lines(...))
     with c (color) = black and

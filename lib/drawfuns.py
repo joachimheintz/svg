@@ -7,9 +7,11 @@ def scale(inval,inmin,inmax,outmin,outmax):
     to the range between outmin and outmax"""
     return (inval-inmin)*((outmax-outmin)/(inmax-inmin))+outmin
 
-def xgrid(inval):
+def xgrid(inval,off=0):
     """for xnum=4, inval is from 0 (left) to 3 (right)
-    as range to write"""
+    as range to write
+    off is subtracted from inval"""
+    inval -= off
     return scale(inval,0,xnum-1,mleft,mleft+xsize)
 
 def ygrid(inval):

@@ -1,0 +1,40 @@
+how to apply syntax highlighting using code mirror
+
+1. create own ipython magics in /usr/local/lib/python3.9/dist-packages/jhmagics.py:
+
+from IPython.core.getipython import get_ipython
+from IPython.core.magic import Magics, magics_class, cell_magic, line_cell_magic
+@magics_class
+class JhMagics(Magics):
+    """Implement magic commands for jh."""
+    def __init__(self, shell):
+        super(JhMagics, self).__init__(shell)
+        ip = get_ipython()
+    @cell_magic
+    def jh(self, line, cell):
+        self.shell.run_cell(cell)
+def load_ipython_extension(ip):
+    ip.magics_manager.register(JhMagics)
+
+(not sure if this can be skipped, as it actually does nothing.
+it is adapted from csoundmagics.py.)
+
+2. add a folder called jh in /usr/lib/python3/dist-packages/notebook/static/components/codemirror/mode
+
+3. in this folder put jh.js.  this contains the javascript code of the jh mode of codemirror.
+amongst it:
+
+  var noten = {
+    "not4tel":true, "not8tel":true,  "not2tel":true, "not16tel":true
+  };
+
+which (together with code later in the file) let "not4tel" be identified as "noten" for the css.
+
+4. the css is then set in /home/jh/.jupyter/custom/custom.css; in this case:
+
+.cm-noten { color: blue; }
+
+5. to apply in a jupyter notebook:
+a. %load_ext jhmagics, to load th jhmagics in this notebook
+b. %%jh, for each cell in which the synax highlighting should be applied
+
