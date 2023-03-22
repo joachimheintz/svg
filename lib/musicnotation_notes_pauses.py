@@ -10,13 +10,14 @@ def note(x=10,y=10,y_space=10,**args):
     p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
     d.append(p)
 
-def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',**args):
+def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,**args):
     """half note with xy as center
     dirlen=1 means in normal length (y_space*2.4) upwards
     dirlen=-1.1 means in length 2.64*yspace downwards
     swfac is stroke width of the line, as relation to y_space*0.1
     **args go to the head
     dotted=0 (default) means no dots, dotted=2 means two dots after the note
+    dotspace and dotsiz set the distance and the size of the dot(s)
     returns the x,y of end of the line to use in 8th notes etc"""
     sw = y_space * swfac * 0.1 
     r = y_space/2
@@ -34,10 +35,10 @@ def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',**args):
         endxy = p1[0],p1[1]-dirlen*y_space*2.4
         d.append(dw.Line(*p1,*endxy,stroke=c,stroke_width=sw))
     if dotted > 0:
-        x = p2[0]+y_space/2
+        x = p2[0]+dotspace*y_space/2
         y = p2[1]-y_space/10
         for i in range(dotted):
-            d.append(dw.Circle(x,y,y_space/6,fill=c))
+            d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
             x += y_space/2
     return endxy
 
