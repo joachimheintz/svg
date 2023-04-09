@@ -27,6 +27,30 @@ def perc2SoftMallets(x=20,y=50,r=2,prop=6,swfac=1,c='black',rotate=25,**args):
     percSoftMallet(x,y,r,prop,swfac,c,transform='rotate(%d %d %d)'%(rotate,x,yrot))
     percSoftMallet(x,y,r,prop,swfac,c,transform='rotate(%d %d %d)'%(-rotate,x,yrot))
 
+def percDrumstick(x=10,y=10,l=20,lfac=0.25,swfac=1,sw2fac=2,c='black',**args):
+    """symbol for drum sticks
+    x,y ist oben
+    swfac ist das verhältnis von sw (stroke width) zu l:
+      sw = swfac * l / 20
+    lfac ist der dicke anteil unten
+    sw2fac ist der faktor um den der untere teil dicker ist als sw"""
+    sw = swfac * l / 20
+    d.append(dw.Line(x,y,x,y+l,stroke=c,stroke_width=sw,**args))
+    d.append(dw.Line(x,y+l-l*lfac,x,y+l,stroke=c,stroke_width=sw*sw2fac,**args))
+    
+def percSuperball(x=20,y=50,r=2,dotfac=0.5,prop=7,swfac=1,c='black',**args):
+    """symbol für superball
+    x,y ist der mittelpunkt des kopfes
+    r ist dessen radius
+    dotfac ist das verhältnis des radius vom punkt in der mitte zum radius des kopfes
+    prop ist die länge des stiels als verhältnis zu r
+    sw = swfac * r / 4"""
+    sw = swfac * r / 4
+    rdot = r*dotfac
+    d.append(dw.Circle(x,y,r,stroke=c,fill='none',stroke_width=sw,**args))
+    d.append(dw.Line(x,y+r,x,y+prop*r,stroke=c,stroke_width=sw,**args))
+    d.append(dw.Circle(x,y,rdot,fill=c,**args))
+
 def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',**args):
     """schlagzeugsymbol für bürste
     sw1fac ist für die waagerechte linie
@@ -123,3 +147,45 @@ def kreisRechts(x=20,y=20,r=7,swfac=1,c='black',**args):
     alen = r*.8
     d.append(dw.Circle(x,y,r,fill='none',stroke=c,stroke_width=sw,**args))
     d.append(dw.Lines(x-r-alen/2,y+alen/2, x-r,y ,x-r+alen/2,y+alen/2,fill='none',stroke=c,stroke_width=sw,**args))
+
+def kreisStartEnd(x=20,y=20,r=7,start=45,end=-225,swfac=1,c='black',**args):
+    """ein kreis mit einem definierten anfang und ende, und einem pfeil in dieser richtung
+    winkel: 0=oben, positiv=clockwise, negativ=linksrum
+    wenn end>start: rechtsrum, und umgekehrt
+    sw = swfac * r / 10
+    x,y ist mitte des kreises"""
+    sw = swfac * r / 10
+    alen = r*.8
+    linelen = r*.66 #länge der linien anfang bzw ende
+    # anfangs und endpunkt berechnen
+    from math import sin,cos,radians
+    alpha,beta = radians(-start+90),radians(-end+90) #winkel bezogen auf x achse
+    x_start,y_start = x+cos(alpha)*r, y-sin(alpha)*r
+    x_end,y_end = x+cos(beta)*r, y-sin(beta)*r
+    # die beiden linien ziehen
+    x_startline_1,y_startline_1 = x_start+cos(alpha)*linelen/2, y_start-sin(alpha)*linelen/2
+    x_startline_2,y_startline_2 = x_start-cos(alpha)*linelen/2, y_start+sin(alpha)*linelen/2
+    x_endline_1,y_endline_1 = x_end+cos(beta)*linelen/2, y_end-sin(beta)*linelen/2
+    x_endline_2,y_endline_2 = x_end-cos(beta)*linelen/2, y_end+sin(beta)*linelen/2
+    d.append(dw.Line(x_startline_1,y_startline_1,x_startline_2,y_startline_2,stroke=c,stroke_width=sw))
+    d.append(dw.Line(x_endline_1,y_endline_1,x_endline_2,y_endline_2,stroke=c,stroke_width=sw))
+    # draw the circle line
+    if abs(start-end) > 180: large_arc=1
+    else: large_arc=0
+    if end > start: 
+        sweep=1
+        startarrow = end-30 #winkel wo der pfeil anfängt
+    else: 
+        sweep=0
+        startarrow = end+30
+    p = dw.Path(stroke=c,stroke_width=sw,fill='none',**args)
+    p.M(x_start,y_start)
+    p.A(r,r,0,large_arc,sweep,x_end,y_end)
+    d.append(p)
+    # arrow
+    gamma = radians(-startarrow+90)
+    x_startarrow,y_startarrow = x+cos(gamma)*r, y-sin(gamma)*r
+    x_startarrow_1,y_startarrow_1 = x_startarrow+cos(gamma)*linelen/3, y_startarrow-sin(gamma)*linelen/3
+    x_startarrow_2,y_startarrow_2 = x_startarrow-cos(gamma)*linelen/3, y_startarrow+sin(gamma)*linelen/3
+    d.append(dw.Lines(x_startarrow_1, y_startarrow_1,x_end,y_end,x_startarrow_2,y_startarrow_2,fill=c,**args))
+

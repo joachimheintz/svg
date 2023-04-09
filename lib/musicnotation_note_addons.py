@@ -104,7 +104,25 @@ def krackelinie(x1=10,y1=10,x2=50,y2=10,hmin=3,hmax=4,prdmin=1.5,prdmax=3,swfac=
         f *= -1
         p.L(x,y)
     d.append(p)
-    
+
+def varVibr(x1=10,y=30,x2=200,h=10,prd1=2,prdfac=2,c='black',**args):
+    """macht ein vibrato mit variabler frequenz
+    h ist die höhe des ausschlags
+    prd1 ist die periodendauer am anfang
+    prdfac ist der faktor für die veränderung der periodendauer"""
+    p = dw.Path(fill='none',stroke=c,**args)
+    p.M(x1,y)
+    x = x1
+    prd = prd1
+    while x < x2:
+        ptarget = x+prd,y
+        c1 = x+prd/2,y-h
+        c2 = x+prd/2,y+h
+        p.C(*c1,*c2,*ptarget)
+        x += prd
+        prd *= prdfac
+    d.append(p)
+
 def triller(xstart=10,y=20,xend=100,siz=10,h=4,prd=2,swtr=.8,swline=.5,c='black',**args):
     """ein triller. siz ist die ungefähre höhe der schrift.
     h ist die amplitude des trillerzeichen, prd seine periode
