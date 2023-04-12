@@ -1,4 +1,4 @@
-def tie(x=10,y=90,xend=100,yend=10,dir=1,sw=1,c='black',**args):
+def tie(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,**args):
     """tie (haltebogen) between two notes
     dir=1 means bowing downwards, dir=1 upwards
     larger number means more bowing
@@ -10,7 +10,7 @@ def tie(x=10,y=90,xend=100,yend=10,dir=1,sw=1,c='black',**args):
     p2 = xend,yend
     pbow = x+xdiff/2,y+ydiff
     c1 = pbow
-    c2 = pbow[0],pbow[1]+ydiff/5
+    c2 = pbow[0],pbow[1]+thick*ydiff/5
     p.M(*p1)
     p.Q(*c1,*p2)
     p.Q(*c2,*p1)
@@ -24,6 +24,19 @@ def accent(x=10,y=10,y_space=10,sw=1,c='black',**args):
     p2 = x+w*0.6,y
     p3 = x-w*0.4,y+y_space/4
     d.append(dw.Lines(*p1,*p2,*p3,stroke=c,stroke_width=sw,fill='none',**args))
+
+def tenuto(x=10,y=10,y_space=10,distfac=1,swfac=1,c='black',**args):
+    """ein tenuto strich
+    x,y ist die position der note
+    y_space>0: oben, y_space<0: unten
+    swfac ist das verhältnis zum y_space:
+        stroke_width = abs(y_space) * 0.1 * swfac
+    distfac modifiziert den abstand zur note"""
+    yy = y - y_space  * distfac
+    x1 = x - y_space * .6
+    x2 = x + y_space * .7
+    sw = abs(y_space) * 0.2 * swfac
+    d.append(dw.Line(x1,yy,x2,yy,stroke=c,stroke_width=sw,**args))
 
 def nlet(x1=10,y1=10,x2=30,y2=10,sw=0.3,h=4,textspace=7,margin=1,
          text='3',fontsiz=7,fontfam='Cantarell',**args):
@@ -158,5 +171,30 @@ def triller(xstart=10,y=20,xend=100,siz=10,h=4,prd=2,swtr=.8,swline=.5,c='black'
         yc2 = p7[1]+h
         p.C(xc1,yc1,xc2,yc2,x,y)
     d.append(p)
+
+def quasitr(xstart=10,y=20,xend=100,siz=10,hmin=3,hmax=5,prdmin=2,prdmax=3,swfac=.5,c='black',**args):
+    """quasi triller mit variabler höhe (hmin,hmax) und variabler periode (prdmin,prdmax).
+    stroke_width = swfac * ((hmin+hmax)/2) * 0.25
+    x,y ist links mitte
+    das könnte man durch brownian o.ä. statt uniform noch schöner machen"""
+    from random import uniform
+    x = xstart
+    sw = swfac * ((hmin+hmax)/2) * 0.25
+    p = dw.Path(fill='none',stroke=c,stroke_width=sw,**args)
+    p.M(x,y)
+    prd = (prdmin+prdmax) / 2
+    h = (hmin+hmax) / 2
+    while x <= xend-prd:
+        x0 = x
+        xc1 = x+prd
+        xc2 = x+prd
+        x += prd*2
+        yc1 = y-h
+        yc2 = y+h
+        p.C(xc1,yc1,xc2,yc2,x,y)
+        prd = uniform(prdmin,prdmax)
+        h = uniform(hmin,hmax)
+    d.append(p)
+
 
 

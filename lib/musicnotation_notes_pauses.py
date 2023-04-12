@@ -1,14 +1,21 @@
-def note(x=10,y=10,y_space=10,**args):
+def note(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """note with xy as center
     for color: fill='gray' or fill='#444'"""
+    sw = y_space * swfac * 0.1 
     r = y_space/2
-    p = dw.Path(**args)
+    p = dw.Path(stroke_width=sw,stroke=c,**args)
     p1 = x-r*1.2,y+r*.6
     p2 = x+r*1.2,y-r*.6
     p.M(*p1)
     p.C(x-r*1.7,y-r*.3, x+r*.3,y-r*1.4, *p2)
     p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
     d.append(p)
+    if dotted > 0:
+        x = p2[0]+dotspace*y_space/2
+        y = p2[1]-y_space/10
+        for i in range(dotted):
+            d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
+            x += y_space/2
 
 def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,swfac_head=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """half note with xy as center
@@ -202,7 +209,110 @@ def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444'
         d.append(dw.Line(*pbottom3,pbottom3[0]+dxflag,pbottom3[1]-dyflag,stroke=c,stroke_width=swflag))
         return pbottom
 
-def gruppe(notlist=[10,50,40,50,60,50],balken=[1,-2,1],dotlist=[],balkdick=1,balkspace=1,balklen=1,
+def gruppe(notlist=[10,60,40,50,60,120],
+           balken=1, dotlist=0,
+           balkdick=1, balkspace=1, balklen=1,
+           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='#444', dotspace=1, dotsiz=1, fill=True,
+           cp_x=0.5, cp_y_shift=0, resolution=100, **args):
+    """eine gruppe von noten unter einem oder mehreren balken.
+        der balken wird als quadratische bezierkurve gezogen; der kontrollpunkt kann
+        mit cp_x und cp_y_shift modifiziert werden.
+    INPUT:
+    notlist: liste mit x,y werten der einzelnen noten
+    balken: entweder zahl für die anzahl der balken
+        oder liste: wie viele balken bei jeder note (negativ = nach links)
+    dotlist: entweder zahl (default 0 = keine)
+        oder liste mit zahlen für punktierung jeder einzelnen note 
+    balkdick: dicke der balken als relation zum y_space (1 = y_space/3)
+    balkspace: abstand zwischen zwei balken als relation zur dicke (1 = dicke*2)
+        entweder zahl oder liste für jede note
+    balklen: länge eines einzelbalkens als relation zu y_space (1 = y-space/2)
+    dirlen: wie bei not4tel; gilt für die randnoten
+    cp_x: horizontale position des kontrollpunkte zwischen 0=links und 1=rechts
+        default = 0.5 (mitte)
+    cp_y_shift: y-verschiebung des kontrollpunkts, als faktor von abs(dirlen)
+        default ist 0, dh der kontrollpunkt liegt auf der linie zwischen den beiden randnoten.
+        cp_y_shift = 1 würde den kontrollpunkt um dirlen nach oben verschieben
+        cp_y_shift = -1 entsprechend nach unten
+    resolution: wieviele punkte für die balken (werden dann durch kleine linien verbunden)
+    die übrigen parameter sind wie bei note
+    fill kann True sein (dann noten gefüllt mit color), oder False (dann hohl)"""
+    # input und umformungen
+    sw = y_space * swfac * 0.1 
+    swhead = sw*swfac_head*1.5
+    dick = balkdick * y_space/3
+    blen = y_space * 0.5 * balklen
+    nothals = dirlen * y_space * 2.5
+    # x und y shifts am notenkopf
+    dir_vz = dirlen / abs(dirlen) # 1 oder -1
+    xshift_head = y_space * 0.6 * dir_vz
+    yshift_head = -y_space * 0.3 * dir_vz
+    # balken start und ende berechnen
+    xstart,ystart = notlist[0],notlist[1]
+    xend,yend = notlist[-2],notlist[-1]
+    xstart_balken = xstart + xshift_head
+    ystart_balken = ystart + yshift_head - nothals
+    xend_balken = xend + xshift_head
+    yend_balken = yend + yshift_head - nothals
+    # den kontrollpunkt festsetzen
+    xcp = xstart_balken + (xend_balken-xstart_balken) * cp_x
+    ycp = ystart_balken + (yend_balken-ystart_balken)*cp_x - cp_y_shift * abs(nothals)
+    # bezierkurve
+    bezier = [xstart_balken,ystart_balken,xcp,ycp,xend_balken,yend_balken]
+    # die angaben für balken und dots ggf expandieren
+    numnotes = round(len(notlist) / 2)
+    if not isinstance(balken,list):
+        balken = [balken]*numnotes
+    if not isinstance(dotlist,list):
+        dotlist = [dotlist]*numnotes
+    if not isinstance(balkspace,list):
+        bspace = [dick * balkspace * 3]*numnotes
+    else:
+        bspace = [dick * i * 3 for i in balkspace]
+    # iterieren 
+    for i in range(numnotes):
+        # 1. notenköpfe, ggf punkt(e)
+        xkopf,ykopf = notlist[i*2],notlist[i*2+1]
+        if fill: f = c
+        else: f = 'none'
+        dt = dotlist[i]
+        note(xkopf,ykopf,y_space,swfac=swhead,dotted=dt,c=c,dotspace=dotspace,dotsiz=dotsiz,fill=f,**args)
+        # 2. hälse
+        xhals = xkopf + xshift_head
+        yhals_kopf = ykopf + yshift_head
+        yhals_balk = getqbezier(xhals,*bezier)
+        d.append(dw.Line(xhals,yhals_kopf,xhals,yhals_balk,stroke=c,stroke_width=sw))
+        # 3. balken
+        balk = balken[i]
+        val = 1
+        # balken zeichnen
+        ybalkshift = [0,0]
+        while val <= abs(balk):
+            #   falls negativ, nach links ziehen
+            if balk < 0: 
+                drawqbezier(xhals-blen,xhals,*bezier,sw=dick,c=c,yshift=ybalkshift)
+            #   alles andere nur bis zur vorletzten note
+            elif i < numnotes-1:
+                nextbalk = abs(balken[i+1])
+                nexthals = notlist[(i+1)*2] + xshift_head
+                res = round((nexthals-xhals)/(xend_balken-xstart_balken) * resolution)
+                if res<2: res = 2
+                # durchziehen falls nächste note mindestens gleiche anzahl hat
+                if nextbalk >= val: xbalk_ende = nexthals
+                # andernfalls kurzer balken
+                else: xbalk_ende = xhals + blen
+                # spezialfall: vorige note hat selbe zahl und nächste ist kleiner
+                if i>0 and balk==balken[i-1] and val>nextbalk: xbalk_ende = xhals
+                # zeichnen 
+                drawqbezier(xhals,xbalk_ende,*bezier,sw=dick,c=c,yshift=ybalkshift,resolution=res)
+            # werte aktualisieren
+            val += 1
+            ybalkshift[0] = ybalkshift[0]+bspace[i]*dir_vz
+            if i < numnotes-1: ybalkshift[1] = ybalkshift[1]+bspace[i+1]*dir_vz
+            else:  ybalkshift[1] = ybalkshift[1]+bspace[i]*dir_vz
+    
+
+def gruppe_deprecated(notlist=[10,50,40,50,60,50],balken=[1,-2,1],dotlist=[],balkdick=1,balkspace=1,balklen=1,
            dirlen=1.5,y_space=10,swfac=1,c='#444',dotspace=1,dotsiz=1,**args):
     """eine gruppe von noten die unter einem balken steht
     notlist: sind die x,y werte
@@ -250,6 +360,62 @@ def gruppe(notlist=[10,50,40,50,60,50],balken=[1,-2,1],dotlist=[],balkdick=1,bal
             x2,y2 = x1-bspace,y1
             d.append(dw.Line(x1,y1,x2,y2,stroke=c,stroke_width=dick))
         val += 1
+
+def gruppe3_deprecated(notlist=[10,60,40,50,60,120],balken=[1,2,1],dotlist=[],balkdick=1,balkspace=1,balklen=1,
+           dirlen=1.5,y_space=10,swfac=1,c='#444',dotspace=1,dotsiz=1,korr=0,**args):
+    """wie gruppe aber für 3 noten die nicht auf einer ebene sind
+    das ist alles nur für dieses stück und müsste allgemeiner gefasst werden
+    notlist: sind die x,y werte
+    balken: gibt an wie viele balken bei jeder note. negativ = nach links
+    dotlist: entweder leer oder zahlen für punktierung (0=keine) 
+    balkdick: dicke der balken als relation zum y_space
+    balkspace: abstand zwischen zwei balken als relation zur dicke
+    balklen: länge eines einzelbalkens als relation zu y_space
+    die übrigen parameter sind wie bei not4tel"""
+    sw = y_space * swfac * 0.1 
+    dick = balkdick * y_space/3
+    bspace = dick * balkspace * 2
+    blen = y_space * 0.5 * balklen
+    # balken start und ende, und noten
+    if dotlist: dt = dotlist[0]
+    else: dt = 0
+    x_balk_start,y_balk_start = not4tel(notlist[0],notlist[1],dirlen,y_space,swfac,dt,c,dotspace,dotsiz,**args)
+    if dotlist: dt = dotlist[2]
+    else: dt = 0
+    x_balk_end,y_balk_end = not4tel(notlist[-2],notlist[-1],dirlen,y_space,swfac,dt,c,dotspace,dotsiz,**args)
+    # nimm den regulären endpunkt vom mittleren hals als bezier kontrollpunkt
+    x_balk_mid,y_balk_mid = not4tel(notlist[2],notlist[3],dirlen,y_space,c='none')
+    # ermittele den y wert der mittleren note beim balken
+    y_mid = getqbezier(x_balk_mid,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)-korr
+    # mittlere note malen
+    if dotlist: dt = dotlist[1]
+    else: dt = 0
+    note(notlist[2],notlist[3],y_space,dt,c,dotspace,dotsiz,**args)
+    if dirlen > 0: 
+        d.append(dw.Line(x_balk_mid,notlist[3]-y_space*.3,
+                         x_balk_mid,y_mid,stroke=c,stroke_width=sw))
+    else: 
+        d.append(dw.Line(notlist[2]-y_space*.6,notlist[3]+y_space*.3,
+                         x_balk_mid,y_mid,stroke=c,stroke_width=sw))
+    # ersten balken malen
+    p = dw.Path(stroke=c,fill='none',stroke_width=dick,**args)
+    p.M(x_balk_start,y_balk_start)
+    p.Q(x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)
+    d.append(p)
+    # ggf zweiten balken
+    if abs(balken[0]) > 1:
+        startx = x_balk_start
+        starty = y_balk_start + bspace
+        endx = startx+blen
+        endy = getqbezier(endx,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)+bspace
+        d.append(dw.Line(startx,starty,endx,endy,stroke=c,stroke_width=dick,**args))
+    if abs(balken[1]) > 1:
+        startx = x_balk_mid
+        starty = y_mid + bspace
+        endx = startx+blen
+        endy = getqbezier(endx,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)+bspace
+        d.append(dw.Line(startx,starty,endx,endy,stroke=c,stroke_width=dick,**args))
+
 
 def hals4tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',**args):
     """nur der hals von xy bis dahin was dirlen sagt
