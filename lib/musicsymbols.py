@@ -37,7 +37,15 @@ def percDrumstick(x=10,y=10,l=20,lfac=0.25,swfac=1,sw2fac=2,c='black',**args):
     sw = swfac * l / 20
     d.append(dw.Line(x,y,x,y+l,stroke=c,stroke_width=sw,**args))
     d.append(dw.Line(x,y+l-l*lfac,x,y+l,stroke=c,stroke_width=sw*sw2fac,**args))
-    
+
+def percStricknadel(x=10,y=10,l=20,swfac=1,c='black',**args):
+    """symbol for stricknadel
+    x,y ist oben
+    swfac ist das verhältnis von sw (stroke width) zu l:
+      sw = swfac * l / 20"""
+    sw = swfac * l / 20
+    d.append(dw.Line(x,y,x,y+l,stroke=c,stroke_width=sw,**args))
+
 def percSuperball(x=20,y=50,r=2,dotfac=0.5,prop=7,swfac=1,c='black',**args):
     """symbol für superball
     x,y ist der mittelpunkt des kopfes

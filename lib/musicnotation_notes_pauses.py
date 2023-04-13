@@ -212,7 +212,7 @@ def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444'
 def gruppe(notlist=[10,60,40,50,60,120],
            balken=1, dotlist=0,
            balkdick=1, balkspace=1, balklen=1,
-           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='#444', dotspace=1, dotsiz=1, fill=True,
+           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='black', dotspace=1, dotsiz=1, fill=True,
            cp_x=0.5, cp_y_shift=0, resolution=100, **args):
     """eine gruppe von noten unter einem oder mehreren balken.
         der balken wird als quadratische bezierkurve gezogen; der kontrollpunkt kann
