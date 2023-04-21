@@ -7,6 +7,58 @@ def scale(inval,inmin,inmax,outmin,outmax):
     to the range between outmin and outmax"""
     return (inval-inmin)*((outmax-outmin)/(inmax-inmin))+outmin
 
+def x_accelrit(xstart=10,xend=100,numnotes=10,ratio=3/4,tolerance=1,maxloops=100):
+    """mach eine accelerando oder ritardando sequenz von numnotes zwischen xstart und xend.
+    der abstand von einer note zur nächsten wird durch ratio gesetzt:
+    ratio = 1: alles noten sind gleichmäßig
+    ratio < 1: accelerando
+    ratio > 1: ritardando
+    in bäuerlicher denkweise wird das ganze mit einem annäherungsverfahren gemacht:
+    tolerance setzt die akzeptierte abweichung des letzten x-wertes von xend fest
+    zur sicherheit setzt maxloops die maximale anzahl der annäherungen fest
+    zurückgegeben wird die liste mit numnotes x-werten"""
+    # gleichmäßige verteilung als startpunkt
+    dist = (xend-xstart) / (numnotes-1)
+    # liste initialisieren
+    xlis = [xstart]*numnotes
+    xlis[1] = xstart+dist
+    # vom ersten abstand ausgehen und die anderen noten nach ratio verteilen
+    x1 = xlis[1]
+    cnt = 0
+    while abs(xend-xlis[-1]) > tolerance and cnt < maxloops:
+        disthier = x1-xstart
+        ds = disthier
+        x = xstart
+        for i in range(1,numnotes):
+            x += ds
+            xlis[i] = x
+            ds *= ratio    
+        # wenn zu weit links, ursprüngliches interval + hälfte
+        if xlis[-1] < xend: x1 = xstart + disthier * 1.5
+        # wenn zu weit rechts, ursprüngliches interval halbieren
+        else: x1 = xstart + disthier * .5
+        cnt += 1
+    return xlis
+
+def accel_stacc(xlis,ybot,ybotadd=0,dirlen=1,y_space=10,swfac=1,swbalkfac=1,
+                c='#444',dotsizfac=1,startbalkindx=1,**args):
+    """macht die accel-staccato figur
+    xlis bekommt den output von x_accelrit
+    ybitadd ist ein y-shift von ton zu ton
+    startbalkindx ist der index in xlis bei dem der zweite balken anfängt"""
+    halslen = y_space*dirlen*2.5
+    swhals = y_space * swfac * 0.1 
+    swbalk = y_space * .3 * swbalkfac
+    dotsiz = y_space * .15 * dotsizfac
+    ytop = ybot-halslen
+    for x in xlis:
+        line(x,ytop,x,ybot,stroke_width=swhals)
+        dot(x,ybot+4*dotsiz,dotsiz)
+        ybot += ybotadd
+    line(xlis[0],ytop+swbalk/2,xlis[-1],ytop+swbalk/2,stroke_width=swbalk)
+    line(xlis[1],ytop+swbalk/2,xlis[-1],ytop++swbalk/2+swbalk*3,stroke_width=swbalk)
+    
+
 def getqbezier(x=40,x0=10,y0=10,x1=50,y1=30,x2=100,y2=80):
     """ermittelt den y wert vom punkt x in einer quadratischen bezierkurve
     für x0 (startpunkt) < x1 (kontrollpunkt) < x2 (endpunkt)

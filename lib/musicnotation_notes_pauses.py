@@ -17,6 +17,24 @@ def note(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**a
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
             x += y_space/2
 
+def not1tel(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
+    """ganze note"""
+    sw = y_space * swfac * 0.2
+    r = y_space/2
+    p = dw.Path(stroke_width=sw,stroke=c,fill='none',**args)
+    p1 = x-r*1.2,y+r*.6
+    p2 = x+r*1.2,y-r*.6
+    p.M(*p1)
+    p.C(x-r*1.7,y-r*.3, x+r*.3,y-r*1.4, *p2)
+    p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
+    d.append(p)
+    if dotted > 0:
+        x = p2[0]+dotspace*y_space/2
+        y = p2[1]-y_space/10
+        for i in range(dotted):
+            d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
+            x += y_space/2
+
 def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,swfac_head=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """half note with xy as center
     dirlen=1 means in normal length (y_space*2.4) upwards

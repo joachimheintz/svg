@@ -16,6 +16,28 @@ def tie(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,**args):
     p.Q(*c2,*p1)
     d.append(p)
 
+def tie2(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,c1=0,c2=1,**args):
+    """haltebogen mit zwei kontrollpunkten c1 und c2 (0-1)
+    dir=1 means bowing downwards, dir=1 upwards
+    larger number means more bowing
+    thick results in the thickness"""
+    xdiff = xend-x
+    cp1_x = x + xdiff*c1
+    cp2_x = x + xdiff*c2
+    p = dw.Path(fill=c,stroke=c,stroke_width=sw,**args)
+    ydiff = xdiff*.2*dir
+    p1 = x,y
+    p2 = xend,yend
+    pbow = x+xdiff/2,y+ydiff
+    cp1 = cp1_x,y+ydiff
+    cp2 = cp2_x,y+ydiff
+    cp1a = cp1_x,cp1[1]+thick*ydiff/5
+    cp2a = cp2_x,cp2[1]+thick*ydiff/5
+    p.M(*p1)
+    p.C(*cp1,*cp2,*p2)
+    p.C(*cp2a,*cp1a,*p1)
+    d.append(p)
+
 def accent(x=10,y=10,y_space=10,sw=1,c='black',**args):
     """a normal accnt sign, like >
     x,y is in the middle of the sign"""
@@ -87,32 +109,46 @@ def glisscurve(x=10,y=90,xend=100,yend=10,c='black',sw=1,sdiff=1,**args):
 
 def kratzgliss(x1=10,y1=10,x2=50,y2=10,h=4,swfac=1,prd=1,c='black',**args):
     """h ist die maximale höhe, p die periode
-    ist im moment nur für waagerechte gliss; später nochmal die y-linie reinbringen
     h * swfac * 0.2 = stroke_width"""
     from random import uniform
+    m = (y2-y1) / (x2-x1)
     p = dw.Path(fill='none',stroke=c,stroke_width=h*swfac*.2,**args)
     p.M(x1,y1)
     x = x1
     while x <= x2:
-        y = y1 + uniform(-h,h) #hier später y korrekt ermitteln
+        y = (x-x1)*m + y1 + uniform(-h,h)
         x += prd
         p.L(x,y)
     d.append(p)
-    
+
+def kratzgliss_q(xstart=10,ystart=10,xend=100,yend=50,xcp=50,ycp=10,h=4,swfac=1,prd=1,c='black',**args):
+    """kratzgliss als quadratische bezier kurve mit dem kontrollpunkt xcp,ycp
+    h ist die maximale höhe, p die periode
+    h * swfac * 0.2 = stroke_width"""
+    from random import uniform
+    p = dw.Path(fill='none',stroke=c,stroke_width=h*swfac*.2,**args)
+    p.M(xstart,ystart)
+    x = xstart
+    while x <= xend:
+        y = getqbezier(x,xstart,ystart,xcp,ycp,xend,yend) + uniform(-h,h)
+        x += prd
+        p.L(x,y)
+    d.append(p)
+
 def krackelinie(x1=10,y1=10,x2=50,y2=10,hmin=3,hmax=4,prdmin=1.5,prdmax=3,swfac=1,c='black',**args):
     """eine krackel linie aus alternierenden oben-unten zacken.
     hmin und hmax ist die minimale und maximale höhe (auch nach unten)
     prdmin und prdmax ist die minimale und maximale periode
-    ist im moment nur für waagerechte (y1=y2) definiert; später nochmal die y-linie reinbringen
     h * swfac * 0.2 = stroke_width"""
     from random import uniform
+    m = (y2-y1) / (x2-x1)
     p = dw.Path(fill='none',stroke=c,stroke_width=hmax*swfac*.2,**args)
     p.M(x1,y1)
     x = x1
     f = -1
     while x <= x2:
         h = uniform(hmin,hmax) * f
-        y = y1 + h #hier später y korrekt ermitteln
+        y = (x-x1)*m + y1 + h
         x += uniform(prdmin,prdmax)
         f *= -1
         p.L(x,y)
