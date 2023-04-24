@@ -15,7 +15,7 @@ def note(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**a
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
 
 def not1tel(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """ganze note"""
@@ -33,7 +33,7 @@ def not1tel(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
 
 def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,swfac_head=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """half note with xy as center
@@ -66,10 +66,10 @@ def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,swfac_head=1,dotted=0,c='black
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
     return endxy
 
-def not4tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,**args):
+def not4tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,cline='black',**args):
     """4ter note with xy as center
     dirlen=1 means in normal length (y_space*2.5) upwards
     dirlen=-1.1 means in length 2.75*yspace downwards
@@ -89,19 +89,19 @@ def not4tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',dotspace=1,d
     d.append(p)
     if dirlen > 0: 
         endxy = p2[0],p2[1]-dirlen*y_space*2.5
-        d.append(dw.Line(p2[0],p2[1]+y_space/5,*endxy,stroke=c,stroke_width=sw))
+        d.append(dw.Line(p2[0],p2[1]+y_space/5,*endxy,stroke=cline,stroke_width=sw))
     else: 
         endxy = p1[0],p1[1]-dirlen*y_space*2.5
-        d.append(dw.Line(p1[0],p1[1]-y_space/5,*endxy,stroke=c,stroke_width=sw))
+        d.append(dw.Line(p1[0],p1[1]-y_space/5,*endxy,stroke=cline,stroke_width=sw))
     if dotted > 0:
         x = p2[0]+dotspace*y_space/2
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
     return endxy
 
-def not8tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444',dotspace=1,dotsiz=1,**args):
+def not8tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444',dotspace=1,dotsiz=1,cline='black',**args):
     """8th note with xy as center
     dirlen=1 means in normal length (y_space*2.75) upwards
     dirlen=-1.2 means in length 3.3*yspace downwards
@@ -127,19 +127,19 @@ def not8tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
     if dirlen > 0: 
         ptop = p2[0],p2[1]-dirlen*y_space*2.75,
-        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=c,stroke_width=swflag))
+        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=cline,stroke_width=swflag))
         return ptop
     else:
         pbottom = p1[0],p1[1]-dirlen*y_space*2.75
-        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=c,stroke_width=swflag))
+        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=cline,stroke_width=swflag))
         return pbottom
 
-def not16tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,**args):
+def not16tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,cline='black',**args):
     """16th note with xy as center
     dirlen=1 means in normal length (y_space*3) upwards
     dirlen=-1.1 means in length 3.3*yspace downwards
@@ -165,23 +165,23 @@ def not16tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444'
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
     if dirlen > 0: 
         ptop = p2[0],p2[1]-dirlen*y_space*3
-        ptop2 = p2[0],ptop[1]+swflag*3
-        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*ptop2,ptop2[0]+dxflag,ptop2[1]+dyflag,stroke=c,stroke_width=swflag))
+        ptop2 = p2[0],ptop[1]+swflag*4
+        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*ptop2,ptop2[0]+dxflag,ptop2[1]+dyflag,stroke=cline,stroke_width=swflag))
         return ptop
     else:
         pbottom = p1[0],p1[1]-dirlen*y_space*3
-        pbottom2 = p1[0],pbottom[1]-swflag*3
-        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*pbottom2,pbottom2[0]+dxflag,pbottom2[1]-dyflag,stroke=c,stroke_width=swflag))
+        pbottom2 = p1[0],pbottom[1]-swflag*4
+        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*pbottom2,pbottom2[0]+dxflag,pbottom2[1]-dyflag,stroke=cline,stroke_width=swflag))
         return pbottom
 
-def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,**args):
+def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444',dotspace=1,dotsiz=1,cline='black',**args):
     """32th note with xy as center
     dirlen=1 means in normal length (y_space*3.25) upwards
     dirlen=-1.2 means in length 3.9*yspace downwards
@@ -207,31 +207,31 @@ def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444'
         y = p2[1]-y_space/10
         for i in range(dotted):
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
-            x += y_space/2
+            x += dotspace*y_space/2
     if dirlen > 0: 
         ptop = p2[0],p2[1]-dirlen*y_space*3.25
         ptop2 = p2[0],ptop[1]+swflag*3
         ptop3 = p2[0],ptop2[1]+swflag*3
-        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*ptop2,ptop2[0]+dxflag,ptop2[1]+dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*ptop3,ptop3[0]+dxflag,ptop3[1]+dyflag,stroke=c,stroke_width=swflag))
+        d.append(dw.Line(p2[0],p2[1]+y_space/5,*ptop,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*ptop,ptop[0]+dxflag,ptop[1]+dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*ptop2,ptop2[0]+dxflag,ptop2[1]+dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*ptop3,ptop3[0]+dxflag,ptop3[1]+dyflag,stroke=cline,stroke_width=swflag))
         return ptop
     else:
         pbottom = p1[0],p1[1]-dirlen*y_space*3.25
         pbottom2 = p1[0],pbottom[1]-swflag*3
         pbottom3 = p1[0],pbottom2[1]-swflag*3
-        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=c,stroke_width=sw))
-        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*pbottom2,pbottom2[0]+dxflag,pbottom2[1]-dyflag,stroke=c,stroke_width=swflag))
-        d.append(dw.Line(*pbottom3,pbottom3[0]+dxflag,pbottom3[1]-dyflag,stroke=c,stroke_width=swflag))
+        d.append(dw.Line(p1[0],p1[1]-y_space/5,*pbottom,stroke=cline,stroke_width=sw))
+        d.append(dw.Line(*pbottom,pbottom[0]+dxflag,pbottom[1]-dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*pbottom2,pbottom2[0]+dxflag,pbottom2[1]-dyflag,stroke=cline,stroke_width=swflag))
+        d.append(dw.Line(*pbottom3,pbottom3[0]+dxflag,pbottom3[1]-dyflag,stroke=cline,stroke_width=swflag))
         return pbottom
 
 def gruppe(notlist=[10,60,40,50,60,120],
            balken=1, dotlist=0,
            balkdick=1, balkspace=1, balklen=1,
-           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='black', dotspace=1, dotsiz=1, fill=True,
-           cp_x=0.5, cp_y_shift=0, resolution=100, **args):
+           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='#444', dotspace=1, dotsiz=1, fill=True,
+           cp_x=0.5, cp_y_shift=0, resolution=100, cline='black', **args):
     """eine gruppe von noten unter einem oder mehreren balken.
         der balken wird als quadratische bezierkurve gezogen; der kontrollpunkt kann
         mit cp_x und cp_y_shift modifiziert werden.
@@ -299,7 +299,7 @@ def gruppe(notlist=[10,60,40,50,60,120],
         xhals = xkopf + xshift_head
         yhals_kopf = ykopf + yshift_head
         yhals_balk = getqbezier(xhals,*bezier)
-        d.append(dw.Line(xhals,yhals_kopf,xhals,yhals_balk,stroke=c,stroke_width=sw))
+        d.append(dw.Line(xhals,yhals_kopf,xhals,yhals_balk,stroke=cline,stroke_width=sw))
         # 3. balken
         balk = balken[i]
         val = 1
@@ -308,7 +308,7 @@ def gruppe(notlist=[10,60,40,50,60,120],
         while val <= abs(balk):
             #   falls negativ, nach links ziehen
             if balk < 0: 
-                drawqbezier(xhals-blen,xhals,*bezier,sw=dick,c=c,yshift=ybalkshift)
+                drawqbezier(xhals-blen,xhals,*bezier,sw=dick,c=cline,yshift=ybalkshift)
             #   alles andere nur bis zur vorletzten note
             elif i < numnotes-1:
                 nextbalk = abs(balken[i+1])
@@ -322,120 +322,15 @@ def gruppe(notlist=[10,60,40,50,60,120],
                 # spezialfall: vorige note hat selbe zahl und nächste ist kleiner
                 if i>0 and balk==balken[i-1] and val>nextbalk: xbalk_ende = xhals
                 # zeichnen 
-                drawqbezier(xhals,xbalk_ende,*bezier,sw=dick,c=c,yshift=ybalkshift,resolution=res)
+                drawqbezier(xhals,xbalk_ende,*bezier,sw=dick,c=cline,yshift=ybalkshift,resolution=res)
             # werte aktualisieren
             val += 1
             ybalkshift[0] = ybalkshift[0]+bspace[i]*dir_vz
             if i < numnotes-1: ybalkshift[1] = ybalkshift[1]+bspace[i+1]*dir_vz
             else:  ybalkshift[1] = ybalkshift[1]+bspace[i]*dir_vz
-    
-
-def gruppe_deprecated(notlist=[10,50,40,50,60,50],balken=[1,-2,1],dotlist=[],balkdick=1,balkspace=1,balklen=1,
-           dirlen=1.5,y_space=10,swfac=1,c='#444',dotspace=1,dotsiz=1,**args):
-    """eine gruppe von noten die unter einem balken steht
-    notlist: sind die x,y werte
-    balken: gibt an wie viele balken bei jeder note. negativ = nach links
-    dotlist: entweder leer oder zahlen für punktierung (0=keine) 
-    balkdick: dicke der balken als relation zum y_space
-    balkspace: abstand zwischen zwei balken als relation zur dicke
-    balklen: länge eines einzelbalkens als relation zu y_space
-    die übrigen parameter sind wie bei not4tel"""
-    endpoints = []
-    dick = balkdick * y_space/3
-    bspace = dick * balkspace * 2
-    blen = y_space * 0.5 * balklen
-    # zuerst die noten als viertel malen
-    for i in range(len(balken)):
-        x,y = notlist[i*2], notlist[i*2+1]
-        if dotlist: dt = dotlist[i]
-        else: dt = 0
-        ex,ey = not4tel(x,y,dirlen,y_space,swfac,dt,c,**args)
-        endpoints.extend((ex,ey))
-    # balken hinzufügen für alle ausser die letzte note
-    for i in range(len(balken)-1):
-        balk = balken[i]
-        nextbalk = abs(balken[i+1])
-        val = 1
-        while val <= abs(balk):
-            # anfangspunkt
-            x1,y1 = endpoints[i*2],endpoints[i*2+1]+bspace*(val-1)
-            # entweder durchziehen bis zur nächsten note
-            if nextbalk >= val: x2,y2 = endpoints[(i+1)*2],endpoints[(i+1)*2+1]+bspace*(val-1)
-            # oder nur einen teilstrich
-            else: x2,y2 = x1+bspace*balk/abs(balk),y1
-            d.append(dw.Line(x1,y1,x2,y2,stroke=c,stroke_width=dick))
-            val += 1
-    # letzte note
-    i = len(balken)-1
-    balk = balken[i]
-    prevbalk = abs(balken[i-1])
-    val = 1
-    while val <= abs(balk):
-        # wo sind wir
-        x1,y1 = endpoints[i*2],endpoints[i*2+1]+bspace*(val-1)
-        # nur etwas nach links ziehen wenn mehr balken als note links
-        if val > prevbalk:
-            x2,y2 = x1-bspace,y1
-            d.append(dw.Line(x1,y1,x2,y2,stroke=c,stroke_width=dick))
-        val += 1
-
-def gruppe3_deprecated(notlist=[10,60,40,50,60,120],balken=[1,2,1],dotlist=[],balkdick=1,balkspace=1,balklen=1,
-           dirlen=1.5,y_space=10,swfac=1,c='#444',dotspace=1,dotsiz=1,korr=0,**args):
-    """wie gruppe aber für 3 noten die nicht auf einer ebene sind
-    das ist alles nur für dieses stück und müsste allgemeiner gefasst werden
-    notlist: sind die x,y werte
-    balken: gibt an wie viele balken bei jeder note. negativ = nach links
-    dotlist: entweder leer oder zahlen für punktierung (0=keine) 
-    balkdick: dicke der balken als relation zum y_space
-    balkspace: abstand zwischen zwei balken als relation zur dicke
-    balklen: länge eines einzelbalkens als relation zu y_space
-    die übrigen parameter sind wie bei not4tel"""
-    sw = y_space * swfac * 0.1 
-    dick = balkdick * y_space/3
-    bspace = dick * balkspace * 2
-    blen = y_space * 0.5 * balklen
-    # balken start und ende, und noten
-    if dotlist: dt = dotlist[0]
-    else: dt = 0
-    x_balk_start,y_balk_start = not4tel(notlist[0],notlist[1],dirlen,y_space,swfac,dt,c,dotspace,dotsiz,**args)
-    if dotlist: dt = dotlist[2]
-    else: dt = 0
-    x_balk_end,y_balk_end = not4tel(notlist[-2],notlist[-1],dirlen,y_space,swfac,dt,c,dotspace,dotsiz,**args)
-    # nimm den regulären endpunkt vom mittleren hals als bezier kontrollpunkt
-    x_balk_mid,y_balk_mid = not4tel(notlist[2],notlist[3],dirlen,y_space,c='none')
-    # ermittele den y wert der mittleren note beim balken
-    y_mid = getqbezier(x_balk_mid,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)-korr
-    # mittlere note malen
-    if dotlist: dt = dotlist[1]
-    else: dt = 0
-    note(notlist[2],notlist[3],y_space,dt,c,dotspace,dotsiz,**args)
-    if dirlen > 0: 
-        d.append(dw.Line(x_balk_mid,notlist[3]-y_space*.3,
-                         x_balk_mid,y_mid,stroke=c,stroke_width=sw))
-    else: 
-        d.append(dw.Line(notlist[2]-y_space*.6,notlist[3]+y_space*.3,
-                         x_balk_mid,y_mid,stroke=c,stroke_width=sw))
-    # ersten balken malen
-    p = dw.Path(stroke=c,fill='none',stroke_width=dick,**args)
-    p.M(x_balk_start,y_balk_start)
-    p.Q(x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)
-    d.append(p)
-    # ggf zweiten balken
-    if abs(balken[0]) > 1:
-        startx = x_balk_start
-        starty = y_balk_start + bspace
-        endx = startx+blen
-        endy = getqbezier(endx,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)+bspace
-        d.append(dw.Line(startx,starty,endx,endy,stroke=c,stroke_width=dick,**args))
-    if abs(balken[1]) > 1:
-        startx = x_balk_mid
-        starty = y_mid + bspace
-        endx = startx+blen
-        endy = getqbezier(endx,x_balk_start,y_balk_start,x_balk_mid,y_balk_mid,x_balk_end,y_balk_end)+bspace
-        d.append(dw.Line(startx,starty,endx,endy,stroke=c,stroke_width=dick,**args))
 
 
-def hals4tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',**args):
+def hals4tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,dotted=0,dotspace=1,c='#444',**args):
     """nur der hals von xy bis dahin was dirlen sagt
     dirlen=1 means in normal length (y_space*2.75) upwards
     dirlen=-1.2 means in length 3.3*yspace downwards
@@ -455,13 +350,13 @@ def hals4tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,dotted=0,c='#444',**args):
         yy = y+y_space/2
         rpoint = pbottom
     if dotted > 0:
-        xx = x+y_space/2
+        xx = x+dotspace*y_space/2
         for i in range(dotted):
             d.append(dw.Circle(xx,yy,y_space/6,fill=c))
-            xx += y_space/2
+            xx += dotspace*y_space/2
     return rpoint
 
-def hals8tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444',**args):
+def hals8tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,dotspace=1,c='#444',**args):
     """nur der hals von xy bis dahin was dirlen sagt
     dirlen=1 means in normal length (y_space*2.75) upwards
     dirlen=-1.2 means in length 3.3*yspace downwards
@@ -487,13 +382,13 @@ def hals8tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#44
         yy = y+y_space/2
         rpoint = pbottom
     if dotted > 0:
-        xx = x+y_space/2
+        xx = x+dotspace*y_space/2
         for i in range(dotted):
             d.append(dw.Circle(xx,yy,y_space/6,fill=c))
-            xx += y_space/2
+            xx += dotspace*y_space/2
     return rpoint
 
-def hals16tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444',**args):
+def hals16tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,dotspace=1,c='#444',**args):
     """nur der hals von xy bis dahin was dirlen sagt
     dirlen=1 means in normal length (y_space*2.75) upwards
     dirlen=-1.2 means in length 3.3*yspace downwards
@@ -523,13 +418,13 @@ def hals16tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#4
         yy = y+y_space/2
         rpoint = pbottom
     if dotted > 0:
-        xx = x+y_space/2
+        xx = x+dotspace*y_space/2
         for i in range(dotted):
             d.append(dw.Circle(xx,yy,y_space/6,fill=c))
-            xx += y_space/2
+            xx += dotspace*y_space/2
     return rpoint
 
-def hals32tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#444',**args):
+def hals32tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,dotspace=1,c='#444',**args):
     """nur der hals von xy bis dahin was dirlen sagt
     dirlen=1 means in normal length (y_space*2.75) upwards
     dirlen=-1.2 means in length 3.3*yspace downwards
@@ -563,10 +458,10 @@ def hals32tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,swflagfac=0.2,dotted=0,c='#4
         yy = y+y_space/2
         rpoint = pbottom
     if dotted > 0:
-        xx = x+y_space/2
+        xx = x+dotspace*y_space/2
         for i in range(dotted):
             d.append(dw.Circle(xx,yy,y_space/6,fill=c))
-            xx += y_space/2
+            xx += dotspace*y_space/2
     return rpoint
 
 
