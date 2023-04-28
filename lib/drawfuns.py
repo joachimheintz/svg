@@ -7,6 +7,22 @@ def scale(inval,inmin,inmax,outmin,outmax):
     to the range between outmin and outmax"""
     return (inval-inmin)*((outmax-outmin)/(inmax-inmin))+outmin
 
+def yfrompoints(x=45,x1=30,y1=20,x2=60,y2=30):
+    """gibt den y wert für x auf der durch die beiden punkte
+    x1,y1 und x2,y2 definierten geraden zurück"""
+    return y1 + ((y2-y1)/(x2-x1)) * (x-x1)
+
+def yfromsegments(x,xyseg=[10,20,30,20,60,30,70,10]):
+    """gibt y für eine kette von (mindestens 2) xy segmenten zurück"""
+    indx = 2 # das wären die ersten beiden segmente
+    while indx < len(xyseg) and xyseg[indx] < x:
+        indx += 2
+    if indx >= len(xyseg): indx = len(xyseg)-2
+    # nun den y wert berechnen
+    x1,y1,x2,y2 = xyseg[indx-2:indx+2]
+    return y1 + ((y2-y1)/(x2-x1)) * (x-x1)
+
+
 def x_accelrit(xstart=10,xend=100,numnotes=10,ratio=3/4,tolerance=1,maxloops=100):
     """mach eine accelerando oder ritardando sequenz von numnotes zwischen xstart und xend.
     der abstand von einer note zur nächsten wird durch ratio gesetzt:

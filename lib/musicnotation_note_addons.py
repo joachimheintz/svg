@@ -38,6 +38,23 @@ def tie2(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,c1=0,c2=1,**arg
     p.C(*cp2a,*cp1a,*p1)
     d.append(p)
 
+def tie3(x=10,y=10,xend=100,yend=10,cpx=40,cpy=40,sw=1,c='black',thick=1,**args):
+    """tie (haltebogen) mit kontrollpunkt als koordinaten
+    dadurch können bögen leicht manuell festgelegt werden
+    dir=1 means bowing downwards, dir=1 upwards
+    larger number means more bowing
+    thick results in the thickness"""
+    p = dw.Path(fill=c,stroke=c,stroke_width=sw,**args)
+    p1 = x,y
+    p2 = xend,yend
+    pbow = cpx,cpy
+    c1 = pbow
+    c2 = pbow[0]+thick*sw,pbow[1]+thick*sw
+    p.M(*p1)
+    p.Q(*c1,*p2)
+    p.Q(*c2,*p1)
+    d.append(p)
+
 def accent(x=10,y=10,y_space=10,sw=1,c='black',**args):
     """a normal accnt sign, like >
     x,y is in the middle of the sign"""
@@ -134,6 +151,41 @@ def kratzgliss_q(xstart=10,ystart=10,xend=100,yend=50,xcp=50,ycp=10,h=4,swfac=1,
         x += prd
         p.L(x,y)
     d.append(p)
+
+def kratzgliss_seg(xyseg=[10,20,50,20,100,30,150,10],hseg=[3,1,8,1],pseg=[1,2,3,2],sw=1,c='black',**args):
+    """kratzglissando mit segmenten zwischen denen interpoliert wird
+    xyseg: mindestens zwei segmente aus xy paaren
+    hseg: genauso viele segmente für die höhe, oder konstanter wert
+    pseg: genauso viele segmente für die periode, oder konstanter wert
+    sw: ein wert für strke width, oder liste mit werten für die segmente"""
+    from random import uniform
+    # alle input parameter in listen umformen
+    numseg = len(xyseg) // 2
+    if not isinstance(hseg,list): hseg = [hseg]*numseg
+    if not isinstance(pseg,list): pseg = [pseg]*numseg
+    if not isinstance(sw,list): sw = [sw]*numseg
+    # die x und y werte in eigene listen schreiben
+    xseg = [xyseg[i*2] for i in range(numseg)]
+    yseg = [xyseg[i*2+1] for i in range(numseg)]
+    # anfangswerte setzen
+    x,y,h,p,s = xseg[0],yseg[0],hseg[0],pseg[0],sw[0]
+    indx = 1
+    while x < xseg[-1]:
+        # abstand zum nächsten x
+        xnext = x+p
+        # werte für y,h,p,sw dort
+        ynext = yfrompoints(xnext,xseg[indx-1],yseg[indx-1],xseg[indx],yseg[indx])
+        hnext = yfrompoints(xnext,xseg[indx-1],hseg[indx-1],xseg[indx],hseg[indx])
+        pnext = yfrompoints(xnext,xseg[indx-1],pseg[indx-1],xseg[indx],pseg[indx])
+        snext = yfrompoints(xnext,xseg[indx-1],sw[indx-1],xseg[indx],sw[indx])
+        ynext += uniform(-h,h)
+        # linie ziehen
+        d.append(dw.Line(x,y,xnext,ynext,stroke=c,stroke_width=s,**args))
+        # werte aktualisieren
+        x,y,h,p,s = xnext,ynext,hnext,pnext,snext
+        # ggf index raufsetzen aber niemals über die grenzen
+        if x > xseg[indx]: indx += 1
+        if indx >= len(xseg): indx = len(xseg)-1
 
 def krackelinie(x1=10,y1=10,x2=50,y2=10,hmin=3,hmax=4,prdmin=1.5,prdmax=3,swfac=1,c='black',**args):
     """eine krackel linie aus alternierenden oben-unten zacken.
