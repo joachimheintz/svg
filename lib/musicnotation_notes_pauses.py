@@ -269,7 +269,8 @@ def gruppe(notlist=[10,60,40,50,60,120],
         cp_y_shift = -1 entsprechend nach unten
     resolution: wieviele punkte für die balken (werden dann durch kleine linien verbunden)
     die übrigen parameter sind wie bei note
-    fill kann True sein (dann noten gefüllt mit color), oder False (dann hohl)"""
+    fill kann True sein (dann noten gefüllt mit color), oder False (dann hohl)
+    gibt x und y von start und ende des äußeren balkens zurück"""
     # input und umformungen
     sw = y_space * swfac * 0.1 
     swhead = sw*swfac_head*1.5
@@ -321,8 +322,8 @@ def gruppe(notlist=[10,60,40,50,60,120],
         # balken zeichnen
         ybalkshift = [0,0]
         while val <= abs(balk):
-            #   falls negativ, nach links ziehen
-            if balk < 0: 
+            #   falls negativ oder letzte note, nach links ziehen
+            if balk < 0 or i == numnotes-1: 
                 drawqbezier(xhals-blen,xhals,*bezier,sw=dick,c=cline,yshift=ybalkshift)
             #   alles andere nur bis zur vorletzten note
             if i < numnotes-1:
@@ -343,6 +344,7 @@ def gruppe(notlist=[10,60,40,50,60,120],
             ybalkshift[0] = ybalkshift[0]+bspace[i]*dir_vz
             if i < numnotes-1: ybalkshift[1] = ybalkshift[1]+bspace[i+1]*dir_vz
             else:  ybalkshift[1] = ybalkshift[1]+bspace[i]*dir_vz
+    return xstart_balken,ystart_balken,xend_balken,yend_balken
 
 
 def hals4tel(x=50,y=50,dirlen=1,y_space=10,swfac=1,dotted=0,dotspace=1,c='#444',**args):

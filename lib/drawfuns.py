@@ -60,7 +60,7 @@ def accel_stacc(xlis,ybot,ybotadd=0,dirlen=1,y_space=10,swfac=1,swbalkfac=1,
                 c='#444',dotsizfac=1,startbalkindx=1,**args):
     """macht die accel-staccato figur
     xlis bekommt den output von x_accelrit
-    ybitadd ist ein y-shift von ton zu ton
+    ybotadd ist ein y-shift von ton zu ton
     startbalkindx ist der index in xlis bei dem der zweite balken anfängt"""
     halslen = y_space*dirlen*2.5
     swhals = y_space * swfac * 0.1 

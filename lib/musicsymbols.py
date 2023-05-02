@@ -59,7 +59,7 @@ def percSuperball(x=20,y=50,r=2,dotfac=0.5,prop=7,swfac=1,c='black',**args):
     d.append(dw.Line(x,y+r,x,y+prop*r,stroke=c,stroke_width=sw,**args))
     d.append(dw.Circle(x,y,rdot,fill=c,**args))
 
-def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',**args):
+def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',falschrum=False,**args):
     """schlagzeugsymbol für bürste
     sw1fac ist für die waagerechte linie
     sw2fac ist für die haare / borsten
@@ -69,6 +69,7 @@ def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',**args):
     sw2 = y_space*sw2fac
     l = y_space*2
     h = y_space*0.6
+    if falschrum: h = -h
     d.append(dw.Line(x,y,x+l,y,stroke=c,stroke_width=sw1,**args))
     numborst = 9
     for i in range(numborst):

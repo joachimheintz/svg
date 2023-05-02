@@ -1,14 +1,15 @@
-def tie(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,**args):
+def tie(x=10,y=10,xend=100,yend=10,dir=1,sw=1,c='black',thick=1,cp=0.5,**args):
     """tie (haltebogen) between two notes
     dir=1 means bowing downwards, dir=1 upwards
     larger number means more bowing
-    thick results in the thickness"""
+    thick results in the thickness
+    cp: x value of control point (0-1), default 0.5"""
     p = dw.Path(fill=c,stroke=c,stroke_width=sw,**args)
     xdiff = xend-x
     ydiff = xdiff*.2*dir
     p1 = x,y
     p2 = xend,yend
-    pbow = x+xdiff/2,y+ydiff
+    pbow = x+xdiff*cp,y+ydiff
     c1 = pbow
     c2 = pbow[0],pbow[1]+thick*ydiff/5
     p.M(*p1)
