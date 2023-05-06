@@ -78,6 +78,31 @@ def tenuto(x=10,y=10,y_space=10,distfac=1,swfac=1,c='black',**args):
     sw = abs(y_space) * 0.2 * swfac
     d.append(dw.Line(x1,yy,x2,yy,stroke=c,stroke_width=sw,**args))
 
+def fermate(x=10,y=20,y_space=10,dir=1,swfac=1,c='black',thick=1,dotfac=1,**args):
+    """eine fermate
+    x,y ist da wo der punkt ist
+    dir=-1 bedeutet von unten"""
+    dotsiz = y_space * .2 * dotfac
+    sw = y_space * .1 * swfac
+    if dir==-1: rot=180
+    else: rot=0
+    d.append(dw.Circle(x,y,dotsiz,fill=c))
+    p = dw.Path(fill=c,stroke=c,stroke_width=sw,
+                transform='rotate(%f,%f,%f)'%(rot,x,y),**args)
+    x1 = x-y_space
+    x2 = x+y_space
+    r = y_space
+    r2 = r-y_space*.1*thick
+    yy = y+y_space/5
+    p1 = x1,yy
+    p2 = x2,yy
+    p.M(*p1)
+    p.A(r,r,0,1,1,*p2)
+    p.A(r,r2,0,1,0,*p1)
+    q = p
+    d.append(p)
+
+
 def nlet(x1=10,y1=10,x2=30,y2=10,sw=0.3,h=4,textspace=7,margin=1,
          text='3',fontsiz=7,fontfam='Cantarell',**args):
     """triplet or any other number
@@ -223,6 +248,54 @@ def varVibr(x1=10,y=30,x2=200,h=10,prd1=2,prdfac=2,c='black',**args):
         p.C(*c1,*c2,*ptarget)
         x += prd
         prd *= prdfac
+    d.append(p)
+
+
+def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args):
+    """macht ein vibrato mit variabler frequenz in brownscher bewegung
+    hmin und hmax geben die höhe des ausschlags
+    prdmin und prdmax geben die periodendauer"""
+    from random import uniform
+    hmaxdiff = hmax-hmin #maximale veränderung zwischen zwei perioden
+    prdmaxdiff = prdmax-prdmin #dito
+    p = dw.Path(fill='none',stroke=c,**args)
+    p.M(x1,y)
+    x = x1
+    h = (hmin+hmax) / 2 #mit den mittleren werten beginnen
+    prd = (prdmin+prdmax) / 2
+    while x < x2:
+        # diese periode ausführen
+        prd = brownian1(prd,prdmin,prdmax,prdmaxdiff)
+        h = brownian1(h,hmin,hmax,hmaxdiff)
+        ptarget = x+prd,y
+        c1 = x+prd/2,y-h
+        c2 = x+prd/2,y+h
+        p.C(*c1,*c2,*ptarget)
+        x += prd
+    d.append(p)
+
+def varVibr2_q(xstart=10,ystart=10,xend=100,yend=50,xcp=50,ycp=10,
+               hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args):
+    """wie varVibr2 aber als quadratische bezierkurve für das ganze"""
+    from random import uniform
+    hmaxdiff = hmax-hmin #maximale veränderung zwischen zwei perioden
+    prdmaxdiff = prdmax-prdmin #dito
+    p = dw.Path(fill='none',stroke=c,**args)
+    p.M(xstart,ystart)
+    x = xstart
+    h = (hmin+hmax) / 2 #mit den mittleren werten beginnen
+    prd = prdmin #damit es sich möglichst schnell bewegt
+    cnt = 0 #der erste sinus ist sonst ganz horizontal
+    while x < xend:
+        y = getqbezier(x,xstart,ystart,xcp,ycp,xend,yend)
+        prd = brownian1(prd,prdmin,prdmax,prdmaxdiff)
+        h = brownian1(h,hmin,hmax,hmaxdiff)
+        ptarget = x+prd,y
+        c1 = x+prd/2,y-h
+        c2 = x+prd/2,y+h
+        if cnt>0: p.C(*c1,*c2,*ptarget)
+        x += prd
+        cnt += 1
     d.append(p)
 
 def triller(xstart=10,y=20,xend=100,siz=10,h=4,prd=2,swtr=.8,swline=.5,c='black',**args):

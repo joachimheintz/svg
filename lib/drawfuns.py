@@ -57,7 +57,7 @@ def x_accelrit(xstart=10,xend=100,numnotes=10,ratio=3/4,tolerance=1,maxloops=100
     return xlis
 
 def accel_stacc(xlis,ybot,ybotadd=0,dirlen=1,y_space=10,swfac=1,swbalkfac=1,
-                c='#444',dotsizfac=1,startbalkindx=1,**args):
+                c='#444',dotsizfac=1,startbalkindx=1,endbalkindx=-1,**args):
     """macht die accel-staccato figur
     xlis bekommt den output von x_accelrit
     ybotadd ist ein y-shift von ton zu ton
@@ -72,8 +72,26 @@ def accel_stacc(xlis,ybot,ybotadd=0,dirlen=1,y_space=10,swfac=1,swbalkfac=1,
         dot(x,ybot+4*dotsiz,dotsiz)
         ybot += ybotadd
     line(xlis[0],ytop+swbalk/2,xlis[-1],ytop+swbalk/2,stroke_width=swbalk)
-    line(xlis[1],ytop+swbalk/2,xlis[-1],ytop++swbalk/2+swbalk*3,stroke_width=swbalk)
-    
+    line(xlis[startbalkindx],ytop+swbalk/2,xlis[endbalkindx],ytop+swbalk/2+swbalk*3,stroke_width=swbalk)
+
+def rit_stacc(xlis,ybot,ybotadd=0,dirlen=1,y_space=10,swfac=1,swbalkfac=1,
+                c='#444',dotsizfac=1,endbalkindx=-1,**args):
+    """wie accel-staccato aber als rit
+    xlis bekommt den output von x_accelrit
+    ybotadd ist ein y-shift von ton zu ton
+    endbalkindx ist der index in xlis bei dem der zweite balken aufhört"""
+    halslen = y_space*dirlen*2.5
+    swhals = y_space * swfac * 0.1 
+    swbalk = y_space * .3 * swbalkfac
+    dotsiz = y_space * .15 * dotsizfac
+    ytop = ybot-halslen
+    for x in xlis:
+        line(x,ytop,x,ybot,stroke_width=swhals)
+        dot(x,ybot+4*dotsiz,dotsiz)
+        ybot += ybotadd
+    line(xlis[0],ytop+swbalk/2,xlis[-1],ytop+swbalk/2,stroke_width=swbalk)
+    line(xlis[0],ytop+swbalk/2+swbalk*3,xlis[endbalkindx],ytop+swbalk/2,stroke_width=swbalk)
+
 
 def getqbezier(x=40,x0=10,y0=10,x1=50,y1=30,x2=100,y2=80):
     """ermittelt den y wert vom punkt x in einer quadratischen bezierkurve
@@ -142,3 +160,26 @@ def arrow(x=10,y=10,l=30,w=8,rot=0,c='black',sw=1,**args):
     p.L(*p2)
     d.append(p)
 
+def brownian1(prevValue=10,minValue=10,maxValue=30,maxDev=10,minDev=0):
+    """gibt einen zufallswert heraus, der vom vorigen status abhängt.
+    maxDev ist die maximal mögliche abweichung (positiv und negativ),
+    minDev (normalerweise 0) die minimale abweichung.
+    min und max Value sind die grenzen.
+    die bewegungsform wird hier als rückprall gesetzt:
+    wenn der vorige wert 9 ist und die eigentliche abweichung +3,
+    dann wird die abweichung zu -2, landet also bei 8"""
+    from random import uniform
+    dev = uniform(minDev,maxDev)
+    # evt richtung verändern
+    if uniform(-1,1) < 0: dev *= -1
+    # nun die möglichkeiten
+    newVal = prevValue+dev
+    if newVal > maxValue:
+        distToLimit = maxValue-prevValue
+        Val = maxValue - (dev-distToLimit)
+    elif newVal < minValue:
+        distToLimit = minValue-prevValue
+        Val = minValue - (dev-distToLimit)
+    else: Val = newVal
+    return Val
+    

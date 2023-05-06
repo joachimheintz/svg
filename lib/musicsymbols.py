@@ -76,6 +76,30 @@ def buerste(x=10,y=10,y_space=10,sw1fac=0.2,sw2fac=0.1,c='black',falschrum=False
         xb = x+i*l/(numborst-1)
         d.append(dw.Line(xb,y,xb,y+h,stroke=c,stroke_width=sw2,**args))
 
+def schluesselbund(x=10,y=10,size=10,swfac=1,c='black',**args):
+    """x,y ist in er mitte des kreises
+    size entspricht dem durchmesser des kreises
+    gezeichnet werden ein paar inbusschlüssel"""
+    sw = size * 0.1 * swfac
+    d.append(dw.Circle(x,y,size/2,stroke=c,stroke_width=sw,fill='none'))
+    xstarts = x-size*.3,x-size*.15,x,x+size*.1,x+size*.2
+    ystarts = y+size*.2,y+size*.3,y+size*.4,y+size*.3,y+size*.2
+    lens = size,size*2,size*1.5,size*.8,size*1.3
+    from random import uniform,seed
+    seed(2)
+    for x1,dir in zip(xstarts,(1,-1,1,-1,-1)):
+        #x1 = uniform(x-size*.3,x+size*.3) #oberes ende
+        x2 = x1 + uniform(-size*.1,size*.1) #unteres ende
+        x3 = x2 + uniform(size*.1,size*.2)
+        y1 = y + uniform(size*.1,size*.3)
+        y2 = y1 + uniform(size,size*2.2)
+        len = y2-y1
+        sw *= .7*len/size
+        alpha = uniform(-20,20)
+        d.append(dw.Lines(x1,y1,x2,y2,x2+dir*len/4,y2,stroke=c,stroke_width=sw,fill='none',
+                         transform='rotate(%f,%f,%f)'%(alpha,x1,y1)))
+        
+
 def hand(x=20,y=20,siz=12,c='black',sw=0.75,**args):
     """hand als schlagzeugsymbol
     x,y ist in der mitte
