@@ -250,7 +250,6 @@ def varVibr(x1=10,y=30,x2=200,h=10,prd1=2,prdfac=2,c='black',**args):
         prd *= prdfac
     d.append(p)
 
-
 def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args):
     """macht ein vibrato mit variabler frequenz in brownscher bewegung
     hmin und hmax geben die höhe des ausschlags

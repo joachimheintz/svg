@@ -35,6 +35,32 @@ def not1tel(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
             x += dotspace*y_space/2
 
+def notbrevis(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,swlinesfac=1,**args):
+    """brevis als ganze note mit strichen
+    swlinesfac ist die dicke der vertikalen linien als verhältnis zu sw"""
+    sw = y_space * swfac * 0.2
+    swlines = sw * 0.5 * swlinesfac
+    r = y_space/2
+    p = dw.Path(stroke_width=sw,stroke=c,fill='none',**args)
+    p1 = x-r*1.2,y+r*.6
+    p2 = x+r*1.2,y-r*.6
+    p.M(*p1)
+    p.C(x-r*1.7,y-r*.3, x+r*.3,y-r*1.4, *p2)
+    p.C(x+r*1.7,y+r*.3, x-r*.3,y+r*1.4, *p1)
+    d.append(p)
+    xleft = x-r*1.65
+    xright = x+r*1.65
+    ytop = y-r*1.4
+    ybot = y+r*1.4
+    d.append(dw.Line(xleft,ytop,xleft,ybot,stroke=c,stroke_width=swlines))
+    d.append(dw.Line(xright,ytop,xright,ybot,stroke=c,stroke_width=swlines))
+    if dotted > 0:
+        x = p2[0]+dotspace*y_space/2
+        y = p2[1]-y_space/10
+        for i in range(dotted):
+            d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
+            x += dotspace*y_space/2
+
 def not2tel(x=20,y=30,dirlen=1,y_space=10,swfac=1,swfac_head=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """half note with xy as center
     dirlen=1 means in normal length (y_space*2.4) upwards
