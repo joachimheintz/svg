@@ -275,12 +275,13 @@ def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',sw=1,*
 
 def varVibr2_l(xstart=10,ystart=10,xend=100,yend=50,
                hmin=5,hmax=10,prdmin=3,prdmax=9,
-               hmaxdiffac=1,prdmaxdiffac=1,mdiffac=2,c='black',sw=1,**args):
+               hmaxdiffac=1,prdmaxdiffac=1,mdiffac=2,c='black',sw=1,returnonly=0,**args):
     """wie varVibr2 aber als linie zwischen xystart und xyend
     mit hmaxdiffac und prdmaxdiffac lässt sich die maximale abweichung von einem
     zum nächsten schritt steuern
     mdiffac=2 bedeutet dass die steigung in einer periode zwischen m/2 und m*2 liegt
-    gitb den pfad zurück"""
+    gibt den pfad zurück
+    wenn returnonly=1 wird NUR der pfad zurückgegeben"""
     from random import uniform
     hmaxdiff = (hmax-hmin) * hmaxdiffac #maximale veränderung zwischen zwei perioden
     prdmaxdiff = (prdmax-prdmin) * prdmaxdiffac #dito
@@ -305,7 +306,7 @@ def varVibr2_l(xstart=10,ystart=10,xend=100,yend=50,
         x = xtarget
         y = ytarget
         cnt += 1
-    d.append(p)
+    if returnonly==0: d.append(p)
     return p
 
 def varVibr2_q(xstart=10,ystart=10,xend=100,yend=50,xcp=50,ycp=10,
