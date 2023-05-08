@@ -17,6 +17,21 @@ def note(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**a
             d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
             x += dotspace*y_space/2
 
+def notx(x=15,y=15,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
+    """note als x-form"""
+    sw = y_space * swfac * 0.2
+    r = y_space/2
+    rx = r*1.2
+    d.append(dw.Line(x-rx,y-r,x+rx,y+r,stroke=c,stroke_width=sw,**args))
+    d.append(dw.Line(x-rx,y+r,x+rx,y-r,stroke=c,stroke_width=sw,**args))
+    p2 = x+r*1.2,y-r*.6
+    if dotted > 0:
+        x = p2[0]+dotspace*y_space/2
+        y = p2[1]-y_space/10
+        for i in range(dotted):
+            d.append(dw.Circle(x,y,dotsiz*y_space/6,fill=c))
+            x += dotspace*y_space/2
+
 def not1tel(x=10,y=10,y_space=10,swfac=1,dotted=0,c='black',dotspace=1,dotsiz=1,**args):
     """ganze note"""
     sw = y_space * swfac * 0.2
@@ -271,8 +286,8 @@ def not32tel(x=10,y=10,dirlen=1,y_space=10,swfac=1,swflagfac=1,dotted=0,c='#444'
 def gruppe(notlist=[10,60,40,50,60,120],
            balken=1, dotlist=0,
            balkdick=1, balkspace=1, balklen=1,
-           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='#444', dotspace=1, dotsiz=1, fill=True,
-           cp_x=0.5, cp_y_shift=0, resolution=100, cline='black', **args):
+           dirlen=1.5, y_space=10, swfac=1, swfac_head=1, c='#444', dotspace=1, dotsiz=1,
+           cp_x=0.5, cp_y_shift=0, resolution=100, cline='black', notheads=1, haelse=1, draw=1, **args):
     """eine gruppe von noten unter einem oder mehreren balken.
         der balken wird als quadratische bezierkurve gezogen; der kontrollpunkt kann
         mit cp_x und cp_y_shift modifiziert werden.
@@ -296,6 +311,16 @@ def gruppe(notlist=[10,60,40,50,60,120],
     resolution: wieviele punkte für die balken (werden dann durch kleine linien verbunden)
     die übrigen parameter sind wie bei note
     fill kann True sein (dann noten gefüllt mit color), oder False (dann hohl)
+    notheads (zahl oder liste):
+        0 = es wird nichts gezeichnet
+        1 = normaler ausgefüllter notenkopf
+        2 = normaler nicht ausgefüllter notenkopf
+        3 = x als notenkopf
+    haelse=1 heisst alle hälse werden gezeichnet
+    haelse=[0,0,1] heisst nur der dritte hals wird gezeichnet
+    draw bezieht sich sowohl auf köpfe als auch auf hälse:
+        draw=1 ist das normale: alles wird gezeichnet
+        draw=[0,0,1] heisst dass von den ersten beiden noten weder hals noch kopf gezeichnet werden
     gibt x und y von start und ende des äußeren balkens zurück"""
     # input und umformungen
     sw = y_space * swfac * 0.1 
@@ -329,19 +354,30 @@ def gruppe(notlist=[10,60,40,50,60,120],
         bspace = [dick * balkspace * 3]*numnotes
     else:
         bspace = [dick * i * 3 for i in balkspace]
+    if not isinstance(notheads,list):
+        notheads = [notheads]*numnotes
+    if not isinstance(haelse,list):
+        haelse = [haelse]*numnotes
+    if not isinstance(draw,list):
+        draw = [draw]*numnotes
     # iterieren 
     for i in range(numnotes):
         # 1. notenköpfe, ggf punkt(e)
         xkopf,ykopf = notlist[i*2],notlist[i*2+1]
-        if fill: f = c
-        else: f = 'none'
         dt = dotlist[i]
-        note(xkopf,ykopf,y_space,swfac=swhead,dotted=dt,c=c,dotspace=dotspace,dotsiz=dotsiz,fill=f,**args)
+        if draw[i]==1:
+            if notheads[i]==1: #normale noten
+                note(xkopf,ykopf,y_space,swfac=swhead,dotted=dt,c=c,dotspace=dotspace,dotsiz=dotsiz,fill=c,**args)
+            elif notheads[i]==2: #köpfe ohne füllung
+                note(xkopf,ykopf,y_space,swfac=swhead,dotted=dt,c=c,dotspace=dotspace,dotsiz=dotsiz,fill='none',**args)
+            elif notheads[i]==3: #köpfe als x
+                notx(xkopf,ykopf,y_space,swfac=swhead,dotted=dt,c=c,dotspace=dotspace,dotsiz=dotsiz,**args)           
         # 2. hälse
         xhals = xkopf + xshift_head
         yhals_kopf = ykopf + yshift_head
         yhals_balk = getqbezier(xhals,*bezier)
-        d.append(dw.Line(xhals,yhals_kopf,xhals,yhals_balk,stroke=cline,stroke_width=sw))
+        if haelse[i]==1 and draw[i]==1:
+            d.append(dw.Line(xhals,yhals_kopf,xhals,yhals_balk,stroke=cline,stroke_width=sw))
         # 3. balken
         balk = balken[i] # zahl insgesamt
         val = 1 # mit erstem balken (von oben) beginnen

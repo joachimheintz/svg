@@ -250,14 +250,14 @@ def varVibr(x1=10,y=30,x2=200,h=10,prd1=2,prdfac=2,c='black',**args):
         prd *= prdfac
     d.append(p)
 
-def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args):
+def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',sw=1,**args):
     """macht ein vibrato mit variabler frequenz in brownscher bewegung
     hmin und hmax geben die höhe des ausschlags
     prdmin und prdmax geben die periodendauer"""
     from random import uniform
     hmaxdiff = hmax-hmin #maximale veränderung zwischen zwei perioden
     prdmaxdiff = prdmax-prdmin #dito
-    p = dw.Path(fill='none',stroke=c,**args)
+    p = dw.Path(fill='none',stroke=c,stroke_width=sw,**args)
     p.M(x1,y)
     x = x1
     h = (hmin+hmax) / 2 #mit den mittleren werten beginnen
@@ -273,13 +273,48 @@ def varVibr2(x1=10,y=30,x2=200,hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args
         x += prd
     d.append(p)
 
+def varVibr2_l(xstart=10,ystart=10,xend=100,yend=50,
+               hmin=5,hmax=10,prdmin=3,prdmax=9,
+               hmaxdiffac=1,prdmaxdiffac=1,mdiffac=2,c='black',sw=1,**args):
+    """wie varVibr2 aber als linie zwischen xystart und xyend
+    mit hmaxdiffac und prdmaxdiffac lässt sich die maximale abweichung von einem
+    zum nächsten schritt steuern
+    mdiffac=2 bedeutet dass die steigung in einer periode zwischen m/2 und m*2 liegt
+    gitb den pfad zurück"""
+    from random import uniform
+    hmaxdiff = (hmax-hmin) * hmaxdiffac #maximale veränderung zwischen zwei perioden
+    prdmaxdiff = (prdmax-prdmin) * prdmaxdiffac #dito
+    m = (yend-ystart) / (xend-xstart)
+    m_maxdiff = ((m*mdiffac)-(m/mdiffac)) / 2
+    p = dw.Path(fill='none',stroke=c,stroke_width=sw,**args)
+    p.M(xstart,ystart)
+    x,y = xstart,ystart
+    h = (hmin+hmax) / 2 #mit den mittleren werten beginnen
+    prd = prdmin #damit es sich möglichst schnell bewegt
+    mhier = m
+    cnt = 0 #der erste sinus ist sonst ganz horizontal
+    while x < xend:
+        mhier = brownian1(mhier,m/mdiffac,m*mdiffac,m_maxdiff)
+        prd = brownian1(prd,prdmin,prdmax,prdmaxdiff)
+        xtarget = x+prd
+        h = brownian1(h,hmin,hmax,hmaxdiff)
+        ytarget = y+(xtarget-x)*mhier
+        c1 = x+prd/2,ytarget-h
+        c2 = x+prd/2,ytarget+h
+        if cnt>0: p.C(*c1,*c2,xtarget,ytarget)
+        x = xtarget
+        y = ytarget
+        cnt += 1
+    d.append(p)
+    return p
+
 def varVibr2_q(xstart=10,ystart=10,xend=100,yend=50,xcp=50,ycp=10,
-               hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',**args):
+               hmin=5,hmax=10,prdmin=3,prdmax=9,c='black',sw=1,**args):
     """wie varVibr2 aber als quadratische bezierkurve für das ganze"""
     from random import uniform
     hmaxdiff = hmax-hmin #maximale veränderung zwischen zwei perioden
     prdmaxdiff = prdmax-prdmin #dito
-    p = dw.Path(fill='none',stroke=c,**args)
+    p = dw.Path(fill='none',stroke=c,stroke_width=sw,**args)
     p.M(xstart,ystart)
     x = xstart
     h = (hmin+hmax) / 2 #mit den mittleren werten beginnen

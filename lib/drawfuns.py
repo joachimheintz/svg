@@ -169,17 +169,23 @@ def brownian1(prevValue=10,minValue=10,maxValue=30,maxDev=10,minDev=0):
     wenn der vorige wert 9 ist und die eigentliche abweichung +3,
     dann wird die abweichung zu -2, landet also bei 8"""
     from random import uniform
+    if minValue>maxValue:
+        vmin = maxValue
+        vmax = minValue
+    else:
+        vmin = minValue
+        vmax = maxValue
     dev = uniform(minDev,maxDev)
     # evt richtung verändern
     if uniform(-1,1) < 0: dev *= -1
     # nun die möglichkeiten
     newVal = prevValue+dev
-    if newVal > maxValue:
-        distToLimit = maxValue-prevValue
-        Val = maxValue - (dev-distToLimit)
-    elif newVal < minValue:
-        distToLimit = minValue-prevValue
-        Val = minValue - (dev-distToLimit)
+    if newVal > vmax:
+        distToLimit = vmax-prevValue
+        Val = vmax - (dev-distToLimit)
+    elif newVal < vmin:
+        distToLimit = vmin-prevValue
+        Val = vmin - (dev-distToLimit)
     else: Val = newVal
     return Val
     
