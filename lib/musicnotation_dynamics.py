@@ -78,6 +78,11 @@ def piano(x=20,y=20,siz=12,c='black',swfac=1,**args):
     p.C(*c3,*c4,*p4)
     d.append(p)
 
+def fortepiano(x=10,y=20,siz=12,c='black',swfac=1,**args):
+    x2 = x+siz/2
+    forte(x,y,siz,c,swfac,**args)
+    piano(x2,y,siz,c,swfac,**args)
+
 def mezzoforte(x=10,y=20,siz=12,c='black',swfac=1,**args):
     """mezzo and forte"""
     xdist = siz*.66
