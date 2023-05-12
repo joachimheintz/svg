@@ -29,3 +29,25 @@ def lines(x1=10,y1=10,*points,c='black',f='none',close=False,**args):
     with c (color) = black and
     fill (f) = none as default"""
     d.append(dw.Lines(x1,y1,*points,close=close,stroke=c,fill=f,**args))
+
+def path_segq(xyseg=[10,10,30,50,50,20,80,0,100,10],c='black',sw=1,f='none',**args):
+    """quasi path mit qbezier als segmente von 
+    punkt, kontrollpunkt, ... punkt"""
+    p = dw.Path(stroke=c,stroke_width=sw,fill=f,**args)
+    p.M(xyseg[0],xyseg[1])
+    indx = 2
+    while indx+3 < len(xyseg):
+        p.Q(xyseg[indx],xyseg[indx+1],xyseg[indx+2],xyseg[indx+3])
+        indx += 4
+    d.append(p)
+
+def path_segc(xyseg=[10,10,20,10,30,50,50,20, 60,20,80,0,100,10],c='black',sw=1,f='none',**args):
+    """quasi path mit cubic bezier als segmente von 
+    punkt, cp1, cp2, ... punkt"""
+    p = dw.Path(stroke=c,stroke_width=sw,fill=f,**args)
+    p.M(xyseg[0],xyseg[1])
+    indx = 2
+    while indx+5 < len(xyseg):
+        p.C(xyseg[indx],xyseg[indx+1],xyseg[indx+2],xyseg[indx+3],xyseg[indx+4],xyseg[indx+5])
+        indx += 6
+    d.append(p)

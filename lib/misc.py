@@ -25,3 +25,16 @@ def krachen(xstart=10,ystart=10,xend=100,yend=30,yrange=10,sw=1,c='black',
         x += 10 / dens
     d.append(p)
 
+def raute(x=20,y=20,w=5,h=10,c='black',f='black',sw=0,**args):
+    """xy ist der mittelpunkt
+    w und h die absolute breite und höhe
+    wenn hohl, f='none' setzen"""
+    p1 = x-w/2,y
+    p2 = x,y-h/2
+    p3 = x+w/2,y
+    p4 = x,y+h/2
+    p = dw.Path(stroke=c,stroke_width=sw,fill=f,**args)
+    p.M(*p1).L(*p2).L(*p3).L(*p4).L(*p1)
+    d.append(p)
+
+
