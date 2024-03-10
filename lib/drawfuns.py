@@ -125,6 +125,25 @@ def drawqbezier(xstart=10,xend=100,x0=10,y0=10,x1=50,y1=30,x2=100,y2=80,resoluti
         x = xnext
         y = ynext
 
+def smooth_curve(xylis=[10,10,30,100,50,20,70,90,90,20],c='black',sw=1,**args):
+    """macht aus den xy punkten sanfte verbindungen mit cubic bezier"""
+    lislen = len(xylis)
+    p1 = xylis[0],xylis[1]
+    p = dw.Path(stroke='black',stroke_width=sw,fill='none',**args)
+    p.M(*p1)
+    i = 0
+    while i < (lislen-2):
+        x0 = xylis[i]
+        y0 = xylis[i+1]
+        x1 = xylis[i+2]
+        y1 = xylis[i+3]
+        xc = x0 + (x1-x0) / 2
+        c1 = xc,y0
+        c2 = xc,y1
+        p.C(*c1,*c2,x1,y1)
+        i += 2
+    d.append(p)
+    
 def xgrid(inval,off=0):
     """for xnum=4, inval is from 0 (left) to 3 (right)
     as range to write

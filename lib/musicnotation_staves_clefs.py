@@ -10,27 +10,31 @@ def stave(x=10,y=10,len=200,y_space=10,color='black',sw=1,numlines=5):
     for i in range(numlines):
         d.append(dw.Line(x,y+i*y_space,x+len,y+i*y_space,stroke=color,stroke_width=sw))
 
-def violinClef(x=10,y=10,linspace=10,color='black',sw=2):
-    """draws a violin clef.  x,y are top left of the stave"""
+def violinClef(x=10,y=10,linspace=10,color='black',sw=2,ottava=0,swottfac=1,**args):
+    """draws a violin clef.  x,y are top left of the stave
+    ottava=1 ist 8 oben, ottava=-1 ist 8 unten
+    swottfac ist stroke width vom okavzeichen als verhältnis zum anderen (default=1)"""
     p1 = x+linspace/2,y+linspace*3.5
     c1a = x+linspace*4,y+linspace
     c1b = x+linspace/3, y+linspace*6
     p2 = x+linspace/10,y+linspace*3
     c2a = x,y+linspace*2
     c2b = x+linspace*2,y-linspace
-    p3 = x+linspace,y-linspace/2
+    p3 = x+linspace,y-linspace/2 #höchster punkt
     c3a = x,y-linspace/2
     c3b = x+linspace*2, y+linspace*4
     p4 = x+linspace/2,y+linspace*5
     c4a = x, y+linspace*5
     c4b = x+linspace/2, y+linspace*4.5
-    p5 = x+linspace/2,y+linspace*4.5
-    p = dw.Path(stroke=color,stroke_width=sw,fill='none')
+    p5 = x+linspace/2,y+linspace*4.5 #tiefster punkt
+    p = dw.Path(stroke=color,stroke_width=sw,fill='none',**args)
     p.M(*p1)
     p.C(*c1a, *c1b, *p2)
     p.C(*c2a, *c2b, *p3)
     p.C(*c3a, *c3b, *p4)
     p.C(*c4a, *c4b, *p5)
+    if ottava==1: acht(p3[0],p3[1]-sw,linspace*.75,color,linspace*1.25*0.12*sw*swottfac)
+    if ottava==-1: acht(p5[0],p5[1]+sw+linspace+sw,linspace*.75,color,linspace*1.25*0.12*sw*swottfac)
     d.append(p)
 
 def bassClef(x=10,y=10,linspace=10,color='black',sw=2,r=1):

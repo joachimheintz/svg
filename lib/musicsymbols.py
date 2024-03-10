@@ -222,3 +222,36 @@ def kreisStartEnd(x=20,y=20,r=7,start=45,end=-225,swfac=1,c='black',**args):
     x_startarrow_2,y_startarrow_2 = x_startarrow-cos(gamma)*linelen/3, y_startarrow+sin(gamma)*linelen/3
     d.append(dw.Lines(x_startarrow_1, y_startarrow_1,x_end,y_end,x_startarrow_2,y_startarrow_2,fill=c,**args))
 
+def loudspeaker(x=50,y=50,size=10,c='black',swfac=1,winkel=0,text='',fontfac=1,ff='Simvoni',**args):
+    """lautsprechersymbol.  xy ist in der mitte des quadrats.
+    winkel=0 heisst nach unten ausgerichtet
+    es kann ein text (zb '1' für ls nummer 1) eingefügt werden, der in der mitte landet"""
+    sw = swfac * size * 0.1
+    p1 = x-size/2,y-size/2 #oben links
+    p2 = x+size/2,y-size/2
+    p3 = x+size/2,y+size/2
+    p4 = x-size/2,y+size/2
+    d.append(dw.Lines(*p1,*p2,*p3,*p4,stroke=c,stroke_width=sw,fill='none',close=True,**args))
+    p5 = x-size,y+size #links unten
+    p6 = x+size,y+size
+    d.append(dw.Lines(*p3,*p4,*p5,*p6,stroke=c,stroke_width=sw,fill='none',close=True,**args))
+    fontsiz = size*fontfac
+    d.append(dw.Text(text,fontsiz,x,y,center=True,font_family=ff,**args))
+
+def papier(x=50,y=50,r=20,numpoints=40,c='black',swfac=1,randfac=1,**args):
+    """papier als krackeliger kreis
+    xy ist der kreismittelpunkt"""
+    sw = swfac * r * 0.1
+    from math import sin, cos, pi
+    from random import uniform
+    p = dw.Path(stroke=c,stroke_width=sw,fill='none')
+    p.M(x+r,y)
+    for i in range(numpoints):
+        wink = (2*pi)*(i/numpoints)
+        randlim = r * randfac * .5
+        xdiff = uniform(-randlim,randlim)
+        ydiff = uniform(-randlim,randlim)
+        p.L(x+r*cos(wink)+xdiff,y-r*sin(wink)+ydiff)
+    p.Z()
+    d.append(p)
+

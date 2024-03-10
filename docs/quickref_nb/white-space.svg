@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="300" height="100" viewBox="0 0 300 100">
+<defs>
+</defs>
+<text x="30" y="30" font-size="14">white   space   not   preserved</text>
+<text x="30" y="60" font-size="14" white-space="pre">white   space   preserved</text>
+</svg>

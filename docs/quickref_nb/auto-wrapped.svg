@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="300" height="100" viewBox="0 0 300 100">
+<defs>
+</defs>
+<text x="50" y="30" font-size="20" style="font-style: sans-serif; inline-size: 200px;">This text wraps at 200 pixels.</text>
+<path d="M50,0 L50,100" stroke="gray" />
+<path d="M250,0 L250,100" stroke="gray" />
+</svg>

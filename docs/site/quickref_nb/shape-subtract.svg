@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="450" height="300" viewBox="0 0 450 300">
+<defs>
+</defs>
+<rect x="25" y="25" width="225" height="175" fill="white" stroke="black" id="rect1" />
+<rect x="200" y="125" width="225" height="150" fill="white" stroke="black" id="rect2" style="shape-margin:25px;" />
+<text x="0" y="0" font-size="12" style="shape-inside:url(#rect1); 
+                                shape-subtract:url(#rect2); 
+                                shape-padding:25px; 
+                                font-family:DejaVu Sans; 
+                                text-align:justified; 
+                                line-height:110%">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.</text>
+<text x="0" y="0" font-size="12" style="shape-inside:url(#rect2);
+                            shape-padding:25px;
+                            font-family:DejaVu Sans;
+                            text-align:justified;
+                            line-height:110%">Lorem ipsum dolor sit amet, consectetur adipisici elit, sed eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquid ex ea commodi consequat.</text>
+</svg>

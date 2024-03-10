@@ -37,4 +37,9 @@ def raute(x=20,y=20,w=5,h=10,c='black',f='black',sw=0,**args):
     p.M(*p1).L(*p2).L(*p3).L(*p4).L(*p1)
     d.append(p)
 
+def kasten(x=10,y=10,w=25,h=10,c='black',sw=1,**args):
+    """macht einen kasten (umrahmung)
+    xy sind oben links"""
+    d.append(dw.Rectangle(x,y,w,h,stroke=c,stroke_width=sw,fill='none',**args))
+
 

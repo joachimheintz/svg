@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    width="300" height="300" viewBox="0 0 300 300">
+<defs>
+</defs>
+<circle cx="150" cy="150" r="125" fill="none" stroke="black" id="circle" />
+<text x="0" y="0" font-size="18" style="shape-inside: url(#circle); shape-padding: 25px; font-family: DejaVu Sans; text-align: justified; line-height: 110%;">This is a sample of wrapped text in SVG 2! There should be 25 pixel padding around the text. The text is justified on both sides. It looks good!</text>
+</svg>
