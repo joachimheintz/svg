@@ -1,4 +1,4 @@
-def sharp(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=2/3):
+def sharp(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=2/3,arrow=0):
     """sharp sign before a note
     x_note and y_note are the middle of the note
     x_offset_mult: x offset between sharp and note as ratio of y_space"""
@@ -10,8 +10,8 @@ def sharp(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=2/3):
     ytop = y_note-y_space
     ytop2 = y_note-y_space*1/2 #left
     ytop1 = y_note-y_space*1/9 #right
-    x1 = x_note-x_offset-width-y_space/2
-    x2 = x_note-x_offset-y_space/2
+    x1 = x_note-x_offset-width-y_space/2 #left
+    x2 = x_note-x_offset-y_space/2 #right
     xmin = x1-y_space*1/5
     xmax = x2+y_space*1/5
     g = dw.Group(stroke=color,stroke_width=sw)
@@ -19,7 +19,30 @@ def sharp(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=2/3):
     g.append(dw.Line(x2,ybot,x2,ytop))
     g.append(dw.Line(xmin,ybot1,xmax,ybot2))
     g.append(dw.Line(xmin,ytop1,xmax,ytop2))
+    p = dw.Path(stroke=color,stroke_width=sw,fill='none')
+    if arrow != 0:
+        arryadd = y_space*2/3
+        arrxydev = y_space/3
+        if arrow == 1:
+            ytopright = ytop
+            xright = x2
+            ytoptop = ytopright-arryadd
+            p.M(xright,ytopright)
+            p.L(xright,ytoptop)
+            p.L(xright-arrxydev,ytoptop+arrxydev)
+            p.M(xright,ytoptop)
+            p.L(xright+arrxydev,ytoptop+arrxydev)
+        if arrow == -1:
+            ybotleft = ybot
+            xleft = x1
+            ybotbot = ybotleft+arryadd
+            p.M(xleft,ybotleft)
+            p.L(xleft,ybotbot)
+            p.L(xleft-arrxydev,ybotbot-arrxydev)
+            p.M(xleft,ybotbot)
+            p.L(xleft+arrxydev,ybotbot-arrxydev)
     d.append(g)
+    d.append(p)
 
 def bflat(x_note=10,y_note=10,y_space=10,color='black',sw=1,x_offset_mult=1,arrow=0):
     """b flat sign before a note
